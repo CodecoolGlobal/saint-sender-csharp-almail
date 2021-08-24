@@ -1,9 +1,10 @@
 ﻿
 namespace SaintSender.Core.Models
 {
-    struct Email
+    struct EmailMessage
+
     {
-        public Email(UserAccount sender, UserAccount receiver, string subject, string body)
+        public EmailMessage(UserAccount sender, UserAccount receiver, string subject, string body)
         {
             Sender = sender;
             Receiver = receiver;
