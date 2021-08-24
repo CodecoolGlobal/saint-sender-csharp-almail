@@ -5,7 +5,7 @@ using System;
 
 namespace SaintSender.Core.Models
 {
-    class Hasher
+    public class Hasher
     {
         private static string HashKey = "UC80Dp2qRF70PVoCinjwp6QegPMKCyZZfd3FNulJceIfqHzVUSCIcRfhJNYh";
 
@@ -17,6 +17,7 @@ namespace SaintSender.Core.Models
 
             using (var hmacsha256 = new HMACSHA256(keyByte))
             {
+                hmacsha256.hash
                 byte[] hashmessage = hmacsha256.ComputeHash(passwordBytes);
                 return Convert.ToBase64String(hashmessage);
             }
