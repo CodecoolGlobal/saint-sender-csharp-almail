@@ -17,7 +17,6 @@ namespace SaintSender.Core.Models
 
             using (var hmacsha256 = new HMACSHA256(keyByte))
             {
-                hmacsha256.hash
                 byte[] hashmessage = hmacsha256.ComputeHash(passwordBytes);
                 return Convert.ToBase64String(hashmessage);
             }
