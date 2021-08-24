@@ -24,5 +24,16 @@ namespace SaintSender.DesktopUI.UserControls
         {
             context.Pop();
         }
+
+        /// <summary>
+        /// Draws a linear gradient in a rectangle with evenly distributed colors
+        /// </summary>
+        /// <param name="rectangle">Target rectangle</param>
+        /// <param name="colors">Array of colors</param>
+        /// <param name="angle">Gradient angle in degrees (0 - horizontal, 90 - vertical)</param>
+        public static void DrawGradient(this DrawingContext context, Rect rectangle, Color[] colors, float angle = 0)
+        {
+            context.DrawRectangle(new LinearGradientBrush(DrawUtil.Gradient(colors), (double)angle), null, rectangle);
+        }
     }
 }
