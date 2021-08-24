@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace SaintSender.DesktopUI.UserControls
 {
-    class EmailDisplay : FrameworkElement
+    class EmailDisplay : CustomComponent
     {
 
         #region LineHeight
@@ -59,11 +60,33 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region ListItemForeground
         public static readonly DependencyProperty ListItemForegroundProperty =
-           DependencyProperty.Register(nameof(ListItemForeground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Transparent));
+           DependencyProperty.Register(nameof(ListItemForeground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Black));
         public Color ListItemForeground
         {
             get => (Color)GetValue(ListItemForegroundProperty);
             set => SetValue(ListItemForegroundProperty, value);
+        }
+        #endregion
+
+
+        #region ListItemHoverBackground
+        public static readonly DependencyProperty ListItemHoverBackgroundProperty =
+           DependencyProperty.Register(nameof(ListItemHoverBackground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Transparent));
+        public Color ListItemHoverBackground
+        {
+            get => (Color)GetValue(ListItemHoverBackgroundProperty);
+            set => SetValue(ListItemHoverBackgroundProperty, value);
+        }
+        #endregion
+
+
+        #region ListItemHoverForeground
+        public static readonly DependencyProperty ListItemHoverForegroundProperty =
+           DependencyProperty.Register(nameof(ListItemHoverForeground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Black));
+        public Color ListItemHoverForeground
+        {
+            get => (Color)GetValue(ListItemHoverForegroundProperty);
+            set => SetValue(ListItemHoverForegroundProperty, value);
         }
         #endregion
 
@@ -90,38 +113,32 @@ namespace SaintSender.DesktopUI.UserControls
         #endregion
 
 
+
         private float scrollY = 0;
+        private float ShrinkWidth => ViewWidth - PaddingHorizonal * 2;
 
-        SolidColorBrush listItemBackground = null;
-        LinearGradientBrush listItemBackgroundGradient = null;
-        SolidColorBrush listItemForeground = null;
+        protected override float PaddingHorizonal => SidePadding;
 
-        float ViewLeft;
-        float ViewRight;
-        float ViewWidth;
-        float ViewReferenceWidth;
-
-        protected override void OnRender(DrawingContext drawingContext)
+        private int HoverIndex
         {
-            listItemBackground = new SolidColorBrush(ListItemBackground);
-            listItemBackgroundGradient = new LinearGradientBrush(Colors.Transparent, DrawUtil.ColorAlpha(ListItemBackground, 1, 0.95f), 0);
-            listItemForeground = new SolidColorBrush(ListItemForeground);
+            get
+            {
+                if (!mouseInside)
+                    return -1;
 
-            ViewLeft = SidePadding;
-            ViewRight = (float)RenderSize.Width - SidePadding;
-            ViewWidth = ViewRight - ViewLeft;
-            ViewReferenceWidth = ViewWidth - SidePadding * 2;
+                return (int)Math.Floor((mousePosition.Y + scrollY) / (LineHeight + BorderThickness));
+            }
+        }
 
+
+        #region Rendering
+        protected override void Render(DrawingContext drawingContext)
+        {
             if (emails == null)
                 emails = TestEmailData();
 
             for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
-            {
-                EmailData email = emails[emailIndex];
-                float yPosition = -scrollY + emailIndex * (LineHeight + BorderThickness);
-
-                RenderEmailListItem(drawingContext, email, yPosition);
-            }
+                RenderEmailListItem(drawingContext, emails[emailIndex], emailIndex);
         }
 
         /// <summary>
@@ -130,33 +147,51 @@ namespace SaintSender.DesktopUI.UserControls
         /// <param name="drawingContext">The DrawingContext instance</param>
         /// <param name="email">The EmailData instance</param>
         /// <param name="yPosition">The line Y position</param>
-        void RenderEmailListItem(DrawingContext drawingContext, EmailData email, float yPosition)
+        void RenderEmailListItem(DrawingContext drawingContext, EmailData email, int index)
         {
+            float yPosition = -scrollY + index * (LineHeight + BorderThickness);
+            Color backColor = ItemBackground(index);
+            Color foreColor = ItemForeground(index);
+
             if (yPosition > RenderSize.Height || yPosition + LineHeight < 0)
                 return;
 
-            drawingContext.DrawRectangle(listItemBackground, null, new Rect(new Point(0, yPosition), new Size(RenderSize.Width, LineHeight)));
+            drawingContext.DrawRectangle(new SolidColorBrush(backColor), null, new Rect(new Point(0, yPosition), new Size(RenderSize.Width, LineHeight)));
 
-            drawingContext.ClipRectangle(ViewLeft, yPosition, ViewReferenceWidth * DateWidth, LineHeight);
-            FormattedText emailText = DrawUtil.FormatText(email.From, listItemForeground, 12, true);
-            FormattedText dateText = DrawUtil.FormatText(email.DateTime.ToString("yyyy.MM.dd HH:mm"), listItemForeground, 12);
+            drawingContext.ClipRectangle(ViewLeft, yPosition, ShrinkWidth * DateWidth, LineHeight);
+            FormattedText emailText = DrawUtil.FormatText(email.From, new SolidColorBrush(foreColor), 12, true);
+            FormattedText dateText = DrawUtil.FormatText(email.DateTime.ToString("yyyy.MM.dd HH:mm"), new SolidColorBrush(foreColor), 12);
             drawingContext.DrawText(emailText, new Point(ViewLeft, yPosition + LineHeight / 2 - emailText.Height));
             drawingContext.DrawText(dateText, new Point(ViewLeft, yPosition + LineHeight / 2));
             drawingContext.ResetClip();
 
-            drawingContext.ClipRectangle(ViewLeft + SidePadding + ViewReferenceWidth * DateWidth, yPosition, ViewReferenceWidth * TitleWidth, LineHeight);
-            FormattedText titleText = DrawUtil.FormatText(email.Title, listItemForeground, 14, true);
-            drawingContext.DrawText(titleText, new Point(ViewLeft + SidePadding + ViewReferenceWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
+            drawingContext.ClipRectangle(ViewLeft + SidePadding + ShrinkWidth * DateWidth, yPosition, ShrinkWidth * TitleWidth, LineHeight);
+            FormattedText titleText = DrawUtil.FormatText(email.Title, new SolidColorBrush(foreColor), 14, true);
+            drawingContext.DrawText(titleText, new Point(ViewLeft + SidePadding + ShrinkWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
             drawingContext.ResetClip();
 
-            if (titleText.Width > ViewReferenceWidth * TitleWidth)
-                drawingContext.DrawRectangle(listItemBackgroundGradient, null, new Rect(ViewLeft + SidePadding + ViewReferenceWidth * (DateWidth + TitleWidth) - 40, yPosition + LineHeight / 2 - titleText.Height / 2, 40, titleText.Height));
+            if (titleText.Width > ShrinkWidth * TitleWidth)
+                drawingContext.DrawGradient(new Rect(ViewLeft + ShrinkWidth * (DateWidth + TitleWidth), yPosition, SidePadding * 2, LineHeight), new Color[] { DrawUtil.ColorAlpha(backColor, 0), DrawUtil.ColorAlpha(backColor, 1), DrawUtil.ColorAlpha(backColor, 0) });
 
-            FormattedText bodyText = DrawUtil.FormatText(email.Body, listItemForeground, 12);
-            drawingContext.DrawText(bodyText, new Point(ViewLeft + SidePadding * 2 + ViewReferenceWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : 0));
+            FormattedText bodyText = DrawUtil.FormatText(email.Body, new SolidColorBrush(foreColor), 12);
+            drawingContext.DrawText(bodyText, new Point(ViewLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : 0));
         }
 
-        
+        Color ItemBackground(int itemIndex)
+        {
+            if (itemIndex == HoverIndex)
+                return ListItemHoverBackground;
+            return ListItemBackground;
+        }
+        Color ItemForeground(int itemIndex)
+        {
+            if (itemIndex == HoverIndex)
+                return ListItemHoverForeground;
+            return ListItemForeground;
+        }
+        #endregion
+
+
 
         EmailData[] emails = null;
 
