@@ -1,6 +1,5 @@
 ﻿using SaintSender.Core.Interfaces;
 using SaintSender.Core.Services;
-using System.ComponentModel;
 
 namespace SaintSender.DesktopUI.ViewModels
 {
@@ -19,11 +18,8 @@ namespace SaintSender.DesktopUI.ViewModels
         /// </summary>
         public string Greeting
         {
-            get { return _greeting; }
-            set
-            {
-                SetProperty<string>(ref _greeting, value);
-            }
+            get => _greeting;
+            set => SetProperty(ref _greeting, value);
         }
 
         /// <summary>
@@ -31,11 +27,8 @@ namespace SaintSender.DesktopUI.ViewModels
         /// </summary>
         public string Name
         {
-            get { return _name; }
-            set
-            {
-                SetProperty<string>(ref _name, value);
-            }
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
 
         public MainWindowViewModel()
