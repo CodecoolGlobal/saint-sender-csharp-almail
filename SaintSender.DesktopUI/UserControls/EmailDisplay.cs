@@ -26,7 +26,7 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region TitleWidth
         public static readonly DependencyProperty TitleWidthProperty =
-           DependencyProperty.Register(nameof(TitleWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.25f));
+           DependencyProperty.Register(nameof(TitleWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.2f));
         public float TitleWidth
         {
             get => (float)GetValue(TitleWidthProperty);
@@ -37,7 +37,7 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region DateWidth
         public static readonly DependencyProperty DateWidthProperty =
-           DependencyProperty.Register(nameof(DateWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.15f));
+           DependencyProperty.Register(nameof(DateWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.16f));
         public float DateWidth
         {
             get => (float)GetValue(DateWidthProperty);
@@ -93,20 +93,24 @@ namespace SaintSender.DesktopUI.UserControls
         private float scrollY = 0;
 
         SolidColorBrush listItemBackground = null;
+        LinearGradientBrush listItemBackgroundGradient = null;
         SolidColorBrush listItemForeground = null;
 
         float ViewLeft;
         float ViewRight;
         float ViewWidth;
+        float ViewReferenceWidth;
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             listItemBackground = new SolidColorBrush(ListItemBackground);
+            listItemBackgroundGradient = new LinearGradientBrush(Colors.Transparent, DrawUtil.ColorAlpha(ListItemBackground, 1, 0.95f), 0);
             listItemForeground = new SolidColorBrush(ListItemForeground);
 
             ViewLeft = SidePadding;
             ViewRight = (float)RenderSize.Width - SidePadding;
             ViewWidth = ViewRight - ViewLeft;
+            ViewReferenceWidth = ViewWidth - SidePadding * 2;
 
             if (emails == null)
                 emails = TestEmailData();
@@ -120,6 +124,12 @@ namespace SaintSender.DesktopUI.UserControls
             }
         }
 
+        /// <summary>
+        /// Draws a line of email list
+        /// </summary>
+        /// <param name="drawingContext">The DrawingContext instance</param>
+        /// <param name="email">The EmailData instance</param>
+        /// <param name="yPosition">The line Y position</param>
         void RenderEmailListItem(DrawingContext drawingContext, EmailData email, float yPosition)
         {
             if (yPosition > RenderSize.Height || yPosition + LineHeight < 0)
@@ -127,22 +137,26 @@ namespace SaintSender.DesktopUI.UserControls
 
             drawingContext.DrawRectangle(listItemBackground, null, new Rect(new Point(0, yPosition), new Size(RenderSize.Width, LineHeight)));
 
-            FormattedText title = TextFormat(email.Title, listItemForeground, 14, true);
-            drawingContext.DrawText(title, new Point(ViewLeft, yPosition + LineHeight / 2f - title.Height / 2f));
+            drawingContext.ClipRectangle(ViewLeft, yPosition, ViewReferenceWidth * DateWidth, LineHeight);
+            FormattedText emailText = DrawUtil.FormatText(email.From, listItemForeground, 12, true);
+            FormattedText dateText = DrawUtil.FormatText(email.DateTime.ToString("yyyy.MM.dd HH:mm"), listItemForeground, 12);
+            drawingContext.DrawText(emailText, new Point(ViewLeft, yPosition + LineHeight / 2 - emailText.Height));
+            drawingContext.DrawText(dateText, new Point(ViewLeft, yPosition + LineHeight / 2));
+            drawingContext.ResetClip();
+
+            drawingContext.ClipRectangle(ViewLeft + SidePadding + ViewReferenceWidth * DateWidth, yPosition, ViewReferenceWidth * TitleWidth, LineHeight);
+            FormattedText titleText = DrawUtil.FormatText(email.Title, listItemForeground, 14, true);
+            drawingContext.DrawText(titleText, new Point(ViewLeft + SidePadding + ViewReferenceWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
+            drawingContext.ResetClip();
+
+            if (titleText.Width > ViewReferenceWidth * TitleWidth)
+                drawingContext.DrawRectangle(listItemBackgroundGradient, null, new Rect(ViewLeft + SidePadding + ViewReferenceWidth * (DateWidth + TitleWidth) - 40, yPosition + LineHeight / 2 - titleText.Height / 2, 40, titleText.Height));
+
+            FormattedText bodyText = DrawUtil.FormatText(email.Body, listItemForeground, 12);
+            drawingContext.DrawText(bodyText, new Point(ViewLeft + SidePadding * 2 + ViewReferenceWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : 0));
         }
 
-        FormattedText TextFormat(string text, Brush color, int fontSize = 12, bool bold = false, string fontFamily = "Segoe UI")
-        {
-            return new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                                new Typeface(new FontFamily(fontFamily),
-                                        FontStyles.Normal,
-                                        bold ? FontWeights.Bold : FontWeights.Normal,
-                                        FontStretches.Normal),
-                                    fontSize,
-                                    color,
-                                    null,
-                                    TextFormattingMode.Display);
-        }
+        
 
         EmailData[] emails = null;
 
