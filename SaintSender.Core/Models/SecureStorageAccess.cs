@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
 
@@ -10,38 +11,49 @@ namespace SaintSender.Core.Models
 
         //Read from secure storage
 
-        public void ReadUserData(string userName)
+        public List<string> ReadData(string fileName)
         {
-            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("TestStore.txt", FileMode.Open, isoStore))
+            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(fileName, FileMode.Open, isoStore))
             {
                 using (StreamReader reader = new StreamReader(isoStream))
                 {
-                    Console.WriteLine("Reading contents:");
-                    Console.WriteLine(reader.ReadToEnd());
+                    List<string> stringList = new List<string>();
+                    while (!reader.EndOfStream) { 
+                        stringList.Add(reader.ReadLine());
+                    }
+                    return stringList;
+
                 }
             }
-        }
-
-        public SecureStorageAccess()
-        {
-            Seed();
         }
 
 
 
         //Write to secure storage (only seed)
-        #region Seed
-        private void Seed()
+        public void WriteUserData(string fileToWrite, List<string> data)
         {
-            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("TestStore.txt", FileMode.Create, isoStore)) 
+            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(fileToWrite, FileMode.Create, isoStore)) 
             {
                 using (StreamWriter writer = new StreamWriter(isoStream))
                 {
-                writer.WriteLine("Hello Isolated Storage");
+                    foreach (string item in data)
+                    {
+                        writer.WriteLine(item);
+                    }
                 }
             };
         }
-        #endregion
+
+        public void WriteUserData(string fileToWrite, string data)
+        {
+            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(fileToWrite, FileMode.Create, isoStore))
+            {
+                using (StreamWriter writer = new StreamWriter(isoStream))
+                {
+                    writer.WriteLine(data);
+                }
+            };
+        }
     }
 }
 
