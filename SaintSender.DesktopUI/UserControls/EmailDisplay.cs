@@ -26,7 +26,7 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region TitleWidth
         public static readonly DependencyProperty TitleWidthProperty =
-           DependencyProperty.Register(nameof(TitleWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.3f));
+           DependencyProperty.Register(nameof(TitleWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.25f));
         public float TitleWidth
         {
             get => (float)GetValue(TitleWidthProperty);
@@ -37,7 +37,7 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region DateWidth
         public static readonly DependencyProperty DateWidthProperty =
-           DependencyProperty.Register(nameof(DateWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.3f));
+           DependencyProperty.Register(nameof(DateWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.15f));
         public float DateWidth
         {
             get => (float)GetValue(DateWidthProperty);
@@ -68,39 +68,45 @@ namespace SaintSender.DesktopUI.UserControls
         #endregion
 
 
-        #region BorderColor
-        public static readonly DependencyProperty BorderColorProperty =
-           DependencyProperty.Register(nameof(BorderColor), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Transparent));
-        public Color BorderColor
+        #region BorderThickness
+        public static readonly DependencyProperty BorderThicknessProperty =
+           DependencyProperty.Register(nameof(BorderThickness), typeof(float), typeof(EmailDisplay), new PropertyMetadata(5f));
+        public float BorderThickness
         {
-            get => (Color)GetValue(BorderColorProperty);
-            set => SetValue(BorderColorProperty, value);
+            get => (float)GetValue(BorderThicknessProperty);
+            set => SetValue(BorderThicknessProperty, value);
         }
         #endregion
 
 
-        #region BorderThickness
-        public static readonly DependencyProperty BorderThicknessProperty =
-           DependencyProperty.Register(nameof(BorderThickness), typeof(double), typeof(EmailDisplay), new PropertyMetadata(1.0));
-        public double BorderThickness
+        #region SidePadding
+        public static readonly DependencyProperty SidePaddingProperty =
+           DependencyProperty.Register(nameof(SidePadding), typeof(float), typeof(EmailDisplay), new PropertyMetadata(20f));
+        public float SidePadding
         {
-            get => (double)GetValue(BorderThicknessProperty);
-            set => SetValue(BorderThicknessProperty, value);
+            get => (float)GetValue(SidePaddingProperty);
+            set => SetValue(SidePaddingProperty, value);
         }
         #endregion
 
 
         private float scrollY = 0;
 
-        Pen borderPen = null;
         SolidColorBrush listItemBackground = null;
         SolidColorBrush listItemForeground = null;
 
+        float ViewLeft;
+        float ViewRight;
+        float ViewWidth;
+
         protected override void OnRender(DrawingContext drawingContext)
         {
-            borderPen = new Pen(Brushes.Red, BorderThickness);
             listItemBackground = new SolidColorBrush(ListItemBackground);
             listItemForeground = new SolidColorBrush(ListItemForeground);
+
+            ViewLeft = SidePadding;
+            ViewRight = (float)RenderSize.Width - SidePadding;
+            ViewWidth = ViewRight - ViewLeft;
 
             if (emails == null)
                 emails = TestEmailData();
@@ -108,7 +114,7 @@ namespace SaintSender.DesktopUI.UserControls
             for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
             {
                 EmailData email = emails[emailIndex];
-                float yPosition = -scrollY + emailIndex * LineHeight;
+                float yPosition = -scrollY + emailIndex * (LineHeight + BorderThickness);
 
                 RenderEmailListItem(drawingContext, email, yPosition);
             }
@@ -116,20 +122,21 @@ namespace SaintSender.DesktopUI.UserControls
 
         void RenderEmailListItem(DrawingContext drawingContext, EmailData email, float yPosition)
         {
-            drawingContext.DrawRectangle(listItemBackground, null, new Rect(new Point(0, yPosition), new Size(Width, LineHeight)));
+            if (yPosition > RenderSize.Height || yPosition + LineHeight < 0)
+                return;
 
-            FormattedText title = TextFormat(email.Title, listItemForeground);
-            drawingContext.DrawText(title, new Point(0, yPosition + LineHeight / 2f - title.Height / 2f));
+            drawingContext.DrawRectangle(listItemBackground, null, new Rect(new Point(0, yPosition), new Size(RenderSize.Width, LineHeight)));
 
-            drawingContext.DrawLine(new Pen(Brushes.Red, BorderThickness), new Point(0, yPosition + 1), new Point(Width, yPosition + 1));
+            FormattedText title = TextFormat(email.Title, listItemForeground, 14, true);
+            drawingContext.DrawText(title, new Point(ViewLeft, yPosition + LineHeight / 2f - title.Height / 2f));
         }
 
-        FormattedText TextFormat(string text, Brush color, string fontFamily = "Segoe UI", int fontSize = 12)
+        FormattedText TextFormat(string text, Brush color, int fontSize = 12, bool bold = false, string fontFamily = "Segoe UI")
         {
             return new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                                 new Typeface(new FontFamily(fontFamily),
                                         FontStyles.Normal,
-                                        FontWeights.Normal,
+                                        bold ? FontWeights.Bold : FontWeights.Normal,
                                         FontStretches.Normal),
                                     fontSize,
                                     color,
