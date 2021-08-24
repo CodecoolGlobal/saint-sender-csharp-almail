@@ -8,16 +8,11 @@ namespace SaintSender.DesktopUI.ViewModels
     /// ViewModel for Main window. Contains all shown information
     /// and necessary service classes to make view functional.
     /// </summary>
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModelBase
     {
         private string _name;
         private string _greeting;
         private readonly IGreetService _greetService;
-
-        /// <summary>
-        /// Whenever a property value changed the subscribed event handler is called.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Gets or sets value of Greeting.
@@ -27,8 +22,7 @@ namespace SaintSender.DesktopUI.ViewModels
             get { return _greeting; }
             set
             {
-                _greeting = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Greeting)));
+                SetProperty<string>(ref _greeting, value);
             }
         }
 
@@ -37,11 +31,10 @@ namespace SaintSender.DesktopUI.ViewModels
         /// </summary>
         public string Name
         {
-            get => _name;
+            get { return _name; }
             set
             {
-                _name = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+                SetProperty<string>(ref _name, value);
             }
         }
 
