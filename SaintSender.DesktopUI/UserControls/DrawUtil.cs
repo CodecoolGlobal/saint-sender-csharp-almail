@@ -44,5 +44,23 @@ namespace SaintSender.DesktopUI.UserControls
         {
             return Color.FromArgb((byte)Math.Round(alpha * 255), (byte)(color.R * rgbMultiplier), (byte)(color.G * rgbMultiplier), (byte)(color.B * rgbMultiplier));
         }
+
+        /// <summary>
+        /// Creates a GradientStopCollection with evenly distributed colors
+        /// </summary>
+        /// <param name="colors">The array of the colors in order</param>
+        /// <returns>Evenly distributed GradientStopCollection</returns>
+        public static GradientStopCollection Gradient(Color[] colors)
+        {
+            GradientStopCollection stops = new GradientStopCollection(colors.Length);
+
+            if (colors.Length == 0)
+                return stops;
+
+            double ratio = 1.0 / (colors.Length - 1);
+            for (int i = 0; i < colors.Length; i++)
+                stops.Add(new GradientStop(colors[i], ratio * i));
+            return stops;
+        }
     }
 }
