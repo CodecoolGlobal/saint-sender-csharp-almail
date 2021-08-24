@@ -17,11 +17,5 @@ namespace SaintSender.DesktopUI
             DataContext = _vm;
             InitializeComponent();
         }
-
-        private void GreetBtn_Click(object sender, RoutedEventArgs e)
-        {
-            // dispatch user interaction to view model
-            _vm.Greet();
-        }
     }
 }
