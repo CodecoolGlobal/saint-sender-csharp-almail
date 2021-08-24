@@ -75,6 +75,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserControls\DrawingContextExtension.cs" />
+    <Compile Include="UserControls\DrawUtil.cs" />
     <Compile Include="UserControls\EmailDisplay.cs" />
     <Compile Include="UserControls\IconButton.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
