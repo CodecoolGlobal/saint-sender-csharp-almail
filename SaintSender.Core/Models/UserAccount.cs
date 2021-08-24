@@ -3,14 +3,12 @@
 {
     internal struct UserAccount
     {
-        public UserAccount(string name, string hashedPassword)
+        public UserAccount(string email, string hashedPassword)
         {
-            Email = name;
-            HashedPassword = hashedPassword;
+            Email = email;
         }
 
         public string Email { get; private set; }
-
-        public string HashedPassword { get; set; }
+        //TODO: Save password to isolated storage
     }
 }

@@ -4,13 +4,13 @@ using System.IO.IsolatedStorage;
 
 namespace SaintSender.Core.Models
 {
-    class SecureStorageAccess
+    public class SecureStorageAccess
     {
         IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
         //Read from secure storage
 
-        private void Test()
+        public void ReadUserData(string userName)
         {
             using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("TestStore.txt", FileMode.Open, isoStore))
             {
@@ -22,18 +22,26 @@ namespace SaintSender.Core.Models
             }
         }
 
+        public SecureStorageAccess()
+        {
+            Seed();
+        }
+
+
+
         //Write to secure storage (only seed)
+        #region Seed
         private void Seed()
         {
-            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("TestStore.txt", FileMode.CreateNew, isoStore)) 
+            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("TestStore.txt", FileMode.Create, isoStore)) 
             {
                 using (StreamWriter writer = new StreamWriter(isoStream))
-                { 
+                {
                 writer.WriteLine("Hello Isolated Storage");
-                Console.WriteLine("You have written to the file.");
                 }
             };
         }
+        #endregion
     }
 }
 

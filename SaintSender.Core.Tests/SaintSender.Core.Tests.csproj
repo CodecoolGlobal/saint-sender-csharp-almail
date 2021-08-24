@@ -52,6 +52,7 @@
     <Compile Include="GreetServiceTests.cs" />
     <Compile Include="HasherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecureStorageAccessTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
