@@ -11,10 +11,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="PanelModal" HorizontalAlignment="Center" Height="113" Margin="0" VerticalAlignment="Center" Width="200" Background="White">
+        <Grid x:Name="PanelModal" HorizontalAlignment="Center" Height="113" Margin="0" VerticalAlignment="Center" Width="220" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="84*"/>
+                <RowDefinition Height="29*"/>
+            </Grid.RowDefinitions>
             <TextBox x:Name="TextboxEmail" Height="23" Margin="20,20,23,0" TextWrapping="Wrap" Text="Email address" VerticalAlignment="Top" BorderBrush="Black"/>
             <TextBox x:Name="TextboxPassword" Height="23" Margin="20,48,23,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" BorderBrush="Black"/>
-            <usercontrols:IconButton Text="Login" HorizontalAlignment="Left" Margin="102,76,0,0" VerticalAlignment="Top" Width="75" IsDefault="True" Click="Button_Click" Background="Black" Foreground="White"/>
+            <usercontrols:IconButton Text="Login" HorizontalAlignment="Left" Margin="122,76,0,0" VerticalAlignment="Top" Width="75" IsDefault="True" Click="Button_Click" Background="Black" Foreground="White" Grid.RowSpan="2"/>
         </Grid>
 
     </Grid>
