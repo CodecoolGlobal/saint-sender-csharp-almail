@@ -1,4 +1,5 @@
 ﻿using SaintSender.DesktopUI.ViewModels;
+using SaintSender.DesktopUI.Views;
 using System.Windows;
 
 namespace SaintSender.DesktopUI
@@ -16,12 +17,9 @@ namespace SaintSender.DesktopUI
             _vm = new MainWindowViewModel();
             DataContext = _vm;
             InitializeComponent();
-        }
 
-        private void GreetBtn_Click(object sender, RoutedEventArgs e)
-        {
-            // dispatch user interaction to view model
-            _vm.Greet();
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.ShowDialog();
         }
     }
 }
