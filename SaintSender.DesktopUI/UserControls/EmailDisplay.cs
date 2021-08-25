@@ -114,36 +114,6 @@ namespace SaintSender.DesktopUI.UserControls
 
 
 
-        private float scrollY = 0;
-        private float ShrinkWidth => ViewWidth - PaddingHorizonal * 2;
-
-        protected override float PaddingHorizonal => SidePadding;
-
-        private int HoverIndex
-        {
-            get
-            {
-                if (!mouseInside)
-                    return -1;
-
-                return (int)Math.Floor((mousePosition.Y + scrollY) / ItemHeight);
-            }
-        }
-
-        private float ItemHeight => LineHeight + BorderThickness;
-
-        private float ScrollMax
-        {
-            get
-            {
-                if (emails == null)
-                    return 0;
-
-                return emails.Length * ItemHeight - ViewHeight;
-            }
-        }
-
-
         #region Rendering
         protected override void Render(DrawingContext drawingContext)
         {
@@ -152,6 +122,8 @@ namespace SaintSender.DesktopUI.UserControls
 
             for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
                 RenderEmailListItem(drawingContext, emails[emailIndex], emailIndex);
+
+            RenderScrollbar(drawingContext);
         }
 
         /// <summary>
@@ -190,17 +162,23 @@ namespace SaintSender.DesktopUI.UserControls
             drawingContext.DrawText(bodyText, new Point(ViewLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : 0));
         }
 
-        Color ItemBackground(int itemIndex)
+        /// <summary>
+        /// Renders a faded small "scrollbar" rectangle on the right side of the component
+        /// </summary>
+        /// <param name="drawingContext">The DrawingContext instance</param>
+        void RenderScrollbar(DrawingContext drawingContext)
         {
-            if (itemIndex == HoverIndex)
-                return ListItemHoverBackground;
-            return ListItemBackground;
-        }
-        Color ItemForeground(int itemIndex)
-        {
-            if (itemIndex == HoverIndex)
-                return ListItemHoverForeground;
-            return ListItemForeground;
+            if (!mouseInside)
+                return;
+
+            float viewScale = (float)RenderSize.Height / (ScrollMax + (float)RenderSize.Height);
+
+            if (viewScale >= 1)
+                return;
+
+            float scrollbarHeight = (float)RenderSize.Height * viewScale;
+
+            drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(100, 0, 0, 0)), null, new Rect(RenderSize.Width - 8, viewScale * scrollY, 8, scrollbarHeight));
         }
         #endregion
 
@@ -212,6 +190,52 @@ namespace SaintSender.DesktopUI.UserControls
             scrollY -= scrollDelta;
             scrollY = Math.Max(0, scrollY);
             scrollY = Math.Min(ScrollMax, scrollY);
+        }
+        #endregion
+
+
+
+        #region Private & Protected
+        private float scrollY = 0;
+        private float ShrinkWidth => ViewWidth - PaddingHorizonal * 2;
+
+        protected override float PaddingHorizonal => SidePadding;
+
+        private int HoverIndex
+        {
+            get
+            {
+                if (!mouseInside)
+                    return -1;
+
+                return (int)Math.Floor((mousePosition.Y + scrollY) / ItemHeight);
+            }
+        }
+
+        private float ItemHeight => LineHeight + BorderThickness;
+
+        private float ScrollMax
+        {
+            get
+            {
+                if (emails == null)
+                    return 0;
+
+                return emails.Length * ItemHeight - ViewHeight;
+            }
+        }
+
+        Color ItemBackground(int itemIndex)
+        {
+            if (itemIndex == HoverIndex)
+                return ListItemHoverBackground;
+            return ListItemBackground;
+        }
+        Color ItemForeground(int itemIndex)
+        {
+            if (itemIndex == HoverIndex)
+                return ListItemHoverForeground;
+            return ListItemForeground;
         }
         #endregion
 
