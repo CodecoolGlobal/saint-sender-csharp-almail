@@ -55,9 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Email.cs" />
+    <Compile Include="Interfaces\IMailerClient.cs" />
+    <Compile Include="Models\EmailMessage.cs" />
     <Compile Include="Models\Hasher.cs" />
-    <Compile Include="Services\MailerService.cs" />
+    <Compile Include="Services\OnlineMailerService.cs" />
     <Compile Include="Models\SecureStorageAccess.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Services\GreetService.cs" />

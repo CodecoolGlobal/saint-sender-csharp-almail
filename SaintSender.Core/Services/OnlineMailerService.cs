@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace SaintSender.Core.Models
 {
-    class MailerService
+    class MailerService : Interfaces.IMailerClient
     {
         public UserAccount account;
         private bool userIsLoggedIn = false;
+
+
 
         public void LogInUser(string userEmail, string password)
         {
@@ -29,6 +31,15 @@ namespace SaintSender.Core.Models
             userIsLoggedIn = false;
         }
 
-        public void SendMail(EmailMessage email) { }
+        public void SendMail(EmailMessage email) {
+            if (userIsLoggedIn)
+            {
+
+            }
+        }
+        public void GetMail()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
