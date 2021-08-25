@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using SaintSender.DesktopUI.Utility;
 
 namespace SaintSender.DesktopUI.UserControls
 {
@@ -19,21 +15,31 @@ namespace SaintSender.DesktopUI.UserControls
         protected virtual float PaddingHorizonal => 0;
         protected virtual float PaddingVertical => 0;
 
-        protected float ViewLeft { get; private set; } = 0;
-        protected float ViewRight { get; private set; } = 0;
-        protected float ViewTop { get; private set; } = 0;
-        protected float ViewBottom { get; private set; } = 0;
-        protected float ViewWidth { get; private set; } = 0;
-        protected float ViewHeight { get; private set; } = 0;
+        protected float InsideLeft { get; private set; } = 0;
+        protected float InsideRight { get; private set; } = 0;
+        protected float InsideTop { get; private set; } = 0;
+        protected float InsideBottom { get; private set; } = 0;
+        protected float InsideWidth { get; private set; } = 0;
+        protected float InsideHeight { get; private set; } = 0;
+        protected float OutsideLeft { get; private set; } = 0;
+        protected float OutsideRight { get; private set; } = 0;
+        protected float OutsideTop { get; private set; } = 0;
+        protected float OutsideBottom { get; private set; } = 0;
+        protected float OutsideWidth { get; private set; } = 0;
+        protected float OutsideHeight { get; private set; } = 0;
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            ViewLeft = PaddingHorizonal;
-            ViewRight = (float)RenderSize.Width - PaddingHorizonal;
-            ViewTop = PaddingVertical;
-            ViewBottom = (float)RenderSize.Height - PaddingVertical;
-            ViewWidth = ViewRight - ViewLeft;
-            ViewHeight = ViewBottom - ViewTop;
+            InsideLeft = PaddingHorizonal;
+            InsideRight = (float)RenderSize.Width - PaddingHorizonal;
+            InsideTop = PaddingVertical;
+            InsideBottom = (float)RenderSize.Height - PaddingVertical;
+            InsideWidth = InsideRight - InsideLeft;
+            InsideHeight = InsideBottom - InsideTop;
+
+            OutsideLeft = OutsideTop = 0;
+            OutsideRight = OutsideWidth = (float)RenderSize.Width;
+            OutsideBottom = OutsideHeight = (float)RenderSize.Height;
 
             Rect screenRect = new Rect(0, 0, (float)RenderSize.Width, (float)RenderSize.Height);
 
