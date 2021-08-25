@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
+using SaintSender.DesktopUI.Utility;
 
 namespace SaintSender.DesktopUI.UserControls
 {
     class EmailDisplay : CustomComponent
     {
-
-        #region LineHeight
+        #region Designer parameters
         public static readonly DependencyProperty LineHeightProperty =
             DependencyProperty.Register(nameof(LineHeight), typeof(float), typeof(EmailDisplay), new PropertyMetadata(30f));
         public float LineHeight
@@ -22,10 +15,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (float)GetValue(LineHeightProperty);
             set => SetValue(LineHeightProperty, value);
         }
-        #endregion
 
 
-        #region TitleWidth
         public static readonly DependencyProperty TitleWidthProperty =
            DependencyProperty.Register(nameof(TitleWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.2f));
         public float TitleWidth
@@ -33,10 +24,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (float)GetValue(TitleWidthProperty);
             set => SetValue(TitleWidthProperty, value);
         }
-        #endregion
 
 
-        #region DateWidth
         public static readonly DependencyProperty DateWidthProperty =
            DependencyProperty.Register(nameof(DateWidth), typeof(float), typeof(EmailDisplay), new PropertyMetadata(0.16f));
         public float DateWidth
@@ -44,10 +33,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (float)GetValue(DateWidthProperty);
             set => SetValue(DateWidthProperty, value);
         }
-        #endregion
 
 
-        #region ListItemBackground
         public static readonly DependencyProperty ListItemBackgroundProperty =
            DependencyProperty.Register(nameof(ListItemBackground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Transparent));
         public Color ListItemBackground
@@ -55,10 +42,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (Color)GetValue(ListItemBackgroundProperty);
             set => SetValue(ListItemBackgroundProperty, value);
         }
-        #endregion
 
 
-        #region ListItemForeground
         public static readonly DependencyProperty ListItemForegroundProperty =
            DependencyProperty.Register(nameof(ListItemForeground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Black));
         public Color ListItemForeground
@@ -66,10 +51,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (Color)GetValue(ListItemForegroundProperty);
             set => SetValue(ListItemForegroundProperty, value);
         }
-        #endregion
 
 
-        #region ListItemHoverBackground
         public static readonly DependencyProperty ListItemHoverBackgroundProperty =
            DependencyProperty.Register(nameof(ListItemHoverBackground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Transparent));
         public Color ListItemHoverBackground
@@ -77,10 +60,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (Color)GetValue(ListItemHoverBackgroundProperty);
             set => SetValue(ListItemHoverBackgroundProperty, value);
         }
-        #endregion
 
 
-        #region ListItemHoverForeground
         public static readonly DependencyProperty ListItemHoverForegroundProperty =
            DependencyProperty.Register(nameof(ListItemHoverForeground), typeof(Color), typeof(EmailDisplay), new PropertyMetadata(Colors.Black));
         public Color ListItemHoverForeground
@@ -88,10 +69,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (Color)GetValue(ListItemHoverForegroundProperty);
             set => SetValue(ListItemHoverForegroundProperty, value);
         }
-        #endregion
 
 
-        #region BorderThickness
         public static readonly DependencyProperty BorderThicknessProperty =
            DependencyProperty.Register(nameof(BorderThickness), typeof(float), typeof(EmailDisplay), new PropertyMetadata(5f));
         public float BorderThickness
@@ -99,10 +78,8 @@ namespace SaintSender.DesktopUI.UserControls
             get => (float)GetValue(BorderThicknessProperty);
             set => SetValue(BorderThicknessProperty, value);
         }
-        #endregion
 
 
-        #region SidePadding
         public static readonly DependencyProperty SidePaddingProperty =
            DependencyProperty.Register(nameof(SidePadding), typeof(float), typeof(EmailDisplay), new PropertyMetadata(20f));
         public float SidePadding
@@ -138,28 +115,28 @@ namespace SaintSender.DesktopUI.UserControls
             Color backColor = ItemBackground(index);
             Color foreColor = ItemForeground(index);
 
-            if (yPosition > RenderSize.Height || yPosition + LineHeight < 0)
+            if (yPosition > OutsideHeight || yPosition + LineHeight < 0)
                 return;
 
-            drawingContext.DrawRectangle(new SolidColorBrush(backColor), null, new Rect(new Point(0, yPosition), new Size(RenderSize.Width, LineHeight)));
+            drawingContext.DrawRectangle(new SolidColorBrush(backColor), null, new Rect(new Point(0, yPosition), new Size(OutsideWidth, LineHeight)));
 
-            drawingContext.ClipRectangle(ViewLeft, yPosition, ShrinkWidth * DateWidth, LineHeight);
+            drawingContext.ClipRectangle(InsideLeft, yPosition, ShrinkWidth * DateWidth, LineHeight);
             FormattedText emailText = DrawUtil.FormatText(email.From, new SolidColorBrush(foreColor), 12, true);
             FormattedText dateText = DrawUtil.FormatText(email.DateTime.ToString("yyyy.MM.dd HH:mm"), new SolidColorBrush(foreColor), 12);
-            drawingContext.DrawText(emailText, new Point(ViewLeft, yPosition + LineHeight / 2 - emailText.Height));
-            drawingContext.DrawText(dateText, new Point(ViewLeft, yPosition + LineHeight / 2));
+            drawingContext.DrawText(emailText, new Point(InsideLeft, yPosition + LineHeight / 2 - emailText.Height));
+            drawingContext.DrawText(dateText, new Point(InsideLeft, yPosition + LineHeight / 2));
             drawingContext.ResetClip();
 
-            drawingContext.ClipRectangle(ViewLeft + SidePadding + ShrinkWidth * DateWidth, yPosition, ShrinkWidth * TitleWidth, LineHeight);
+            drawingContext.ClipRectangle(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition, ShrinkWidth * TitleWidth, LineHeight);
             FormattedText titleText = DrawUtil.FormatText(email.Title, new SolidColorBrush(foreColor), 14, true);
-            drawingContext.DrawText(titleText, new Point(ViewLeft + SidePadding + ShrinkWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
+            drawingContext.DrawText(titleText, new Point(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
             drawingContext.ResetClip();
 
             if (titleText.Width > ShrinkWidth * TitleWidth)
-                drawingContext.DrawGradient(new Rect(ViewLeft + ShrinkWidth * (DateWidth + TitleWidth), yPosition, SidePadding * 2, LineHeight), new Color[] { DrawUtil.ColorAlpha(backColor, 0), DrawUtil.ColorAlpha(backColor, 1), DrawUtil.ColorAlpha(backColor, 0) });
+                drawingContext.DrawGradient(new Rect(InsideLeft + ShrinkWidth * (DateWidth + TitleWidth), yPosition, SidePadding * 2, LineHeight), new Color[] { DrawUtil.ColorAlpha(backColor, 0), DrawUtil.ColorAlpha(backColor, 1), DrawUtil.ColorAlpha(backColor, 0) });
 
             FormattedText bodyText = DrawUtil.FormatText(email.Body, new SolidColorBrush(foreColor), 12);
-            drawingContext.DrawText(bodyText, new Point(ViewLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : 0));
+            drawingContext.DrawText(bodyText, new Point(InsideLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : 0));
         }
 
         /// <summary>
@@ -171,14 +148,14 @@ namespace SaintSender.DesktopUI.UserControls
             if (!mouseInside)
                 return;
 
-            float viewScale = (float)RenderSize.Height / (ScrollMax + (float)RenderSize.Height);
+            float viewScale = OutsideHeight / (ScrollMax + OutsideHeight);
 
             if (viewScale >= 1)
                 return;
 
-            float scrollbarHeight = (float)RenderSize.Height * viewScale;
+            float scrollbarHeight = OutsideHeight * viewScale;
 
-            drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(100, 0, 0, 0)), null, new Rect(RenderSize.Width - 8, viewScale * scrollY, 8, scrollbarHeight));
+            drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(100, 0, 0, 0)), null, new Rect(OutsideRight - 8, viewScale * scrollY, 8, scrollbarHeight));
         }
         #endregion
 
@@ -197,7 +174,7 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region Private & Protected
         private float scrollY = 0;
-        private float ShrinkWidth => ViewWidth - PaddingHorizonal * 2;
+        private float ShrinkWidth => InsideWidth - PaddingHorizonal * 2;
 
         protected override float PaddingHorizonal => SidePadding;
 
@@ -221,7 +198,7 @@ namespace SaintSender.DesktopUI.UserControls
                 if (emails == null)
                     return 0;
 
-                return emails.Length * ItemHeight - ViewHeight;
+                return emails.Length * ItemHeight - InsideHeight;
             }
         }
 
@@ -238,6 +215,7 @@ namespace SaintSender.DesktopUI.UserControls
             return ListItemForeground;
         }
         #endregion
+
 
 
         EmailData[] emails = null;
