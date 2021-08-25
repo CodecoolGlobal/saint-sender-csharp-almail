@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using static SaintSender.DesktopUI.Utility.DrawUtil;
 
 namespace SaintSender.DesktopUI.Utility
 {
@@ -42,6 +43,18 @@ namespace SaintSender.DesktopUI.Utility
         public static void DrawGradient(this DrawingContext context, Rect rectangle, Color[] colors, float angle = 0)
         {
             context.DrawRectangle(new LinearGradientBrush(DrawUtil.Gradient(colors), (double)angle), null, rectangle);
+        }
+
+        public static void DrawIcon(this DrawingContext context, string iconName, Color color, Rect rectangle, out Size textSize, IconStyle style = IconStyle.Solid, int fontSize = 12)
+        {
+            textSize = new Size(0, 0);
+            if (!Icons[(int)style].ContainsKey(iconName))
+                return;
+
+            /*//FormattedText iconText = FormatText(Icons[(int)style][iconName], new SolidColorBrush(color), FontawesomeFont, fontSize, false);
+            FormattedText iconText = FormatText(Icons[(int)style][iconName], new SolidColorBrush(color), FontawesomeFont, fontSize, false);
+            textSize = new Size(iconText.Width, iconText.Height);
+            context.DrawText(iconText, new Point(rectangle.X + rectangle.Width / 2 - iconText.Width / 2, rectangle.Y + rectangle.Height / 2 - iconText.Height / 2));*/
         }
     }
 }
