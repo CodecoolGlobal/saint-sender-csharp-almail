@@ -41,6 +41,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -75,6 +76,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserControls\AdvancedButton.cs" />
     <Compile Include="UserControls\CustomComponent.cs" />
     <Compile Include="Utility\DrawingContextExtension.cs" />
     <Compile Include="Utility\DrawUtil.cs" />
@@ -126,7 +128,7 @@
     <Resource Include="Views\ui_plan.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\main_background_4.jpg" />
+    <Resource Include="Resources\Images\main_background_4.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
