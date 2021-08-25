@@ -1,4 +1,5 @@
 ﻿using SaintSender.Core.Interfaces;
+using SaintSender.Core.Models;
 using SaintSender.Core.Services;
 
 namespace SaintSender.DesktopUI.ViewModels
@@ -49,6 +50,16 @@ namespace SaintSender.DesktopUI.ViewModels
         public void LogIn(string email, string password)
         {
             _mailService.LogInUser(email, password);
+        }
+
+        public void RefreshMails()
+        {
+            _mailService.LoadMails();
+        }
+
+        public EmailMessage[] GetEmailList()
+        {
+            return _mailService.Emails.ToArray();
         }
     }
 }
