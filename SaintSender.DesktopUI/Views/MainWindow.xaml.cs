@@ -1,6 +1,8 @@
 ﻿using SaintSender.DesktopUI.ViewModels;
 using SaintSender.DesktopUI.Views;
 using System.Windows;
+using System.Windows.Forms;
+
 
 namespace SaintSender.DesktopUI
 {
@@ -15,11 +17,15 @@ namespace SaintSender.DesktopUI
         {
             // set DataContext to the ViewModel object
             _vm = new MainWindowViewModel();
+           
             DataContext = _vm;
             InitializeComponent();
 
             LoginWindow loginWindow = new LoginWindow();
-            loginWindow.ShowDialog();
+            bool? loginResult = loginWindow.ShowDialog();
+            if (loginResult.HasValue || loginResult.Value) {
+                _vm.LogIn(loginWindow.emailAddress, loginWindow.password);
+            }
         }
     }
 }

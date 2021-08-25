@@ -1,21 +1,57 @@
 ﻿
+using System.Collections.Generic;
+using MimeKit;
+using System.Diagnostics;
+
 namespace SaintSender.Core.Models
 {
-    struct EmailMessage
+    public class EmailMessage
 
     {
-        public EmailMessage(UserAccount sender, UserAccount receiver, string subject, string body)
+        public EmailMessage(string sender, string receiver, string subject, string body)
         {
             Sender = sender;
-            Receiver = receiver;
+            Receiver.Add(receiver);
             Subject = subject;
             Body = body;
         }
 
-        public UserAccount Sender { get; set; }
-        public UserAccount Receiver { get; set; }
+        public EmailMessage(MimeMessage message)
+        {
+            Debug.WriteLine(message);
+            foreach (var mailbox in message.From.Mailboxes)
+            {
+                Sender = mailbox.Address;
+            }
+            foreach (var mailbox in message.To.Mailboxes)
+            {
+                Receiver.Add(mailbox.Address);
+            }
+            sentTime = message.Date.DateTime;
+            Subject = message.Subject;
+            Body = message.HtmlBody;
+        }
 
-        public string Subject { get; set; }
-        public string Body { get; set; }
+
+        public System.DateTime sentTime { get; }
+        public string Sender { get; }
+        public List<string> Receiver { get; set; } = new List<string>();
+
+        public string Subject { get; }
+        public string Body { get; }
+    }
+
+
+    public static class InternetAddressListExtension{
+
+        public static List<string> getAddressList(this InternetAddressList list)
+        {
+            List<string> returnList = new List<string>();
+            foreach (InternetAddress address in list)
+            {
+                returnList.Add(address.Name);
+            }
+            return returnList;
+        }
     }
 }

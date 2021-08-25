@@ -12,6 +12,7 @@ namespace SaintSender.DesktopUI.ViewModels
         private string _name;
         private string _greeting;
         private readonly IGreetService _greetService;
+        private IMailerClient _mailService = new OnlineMailerService();
 
         /// <summary>
         /// Gets or sets value of Greeting.
@@ -43,6 +44,11 @@ namespace SaintSender.DesktopUI.ViewModels
         public void Greet()
         {
             Greeting = _greetService.Greet(Name);
+        }
+
+        public void LogIn(string email, string password)
+        {
+            _mailService.LogInUser(email, password);
         }
     }
 }

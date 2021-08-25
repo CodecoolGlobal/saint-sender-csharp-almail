@@ -19,6 +19,9 @@ namespace SaintSender.DesktopUI.Views
     /// </summary>
     public partial class LoginWindow : Window
     {
+
+        public string emailAddress => TextboxEmail.Text;
+        public string password => TextboxPassword.Text;
         public LoginWindow()
         {
             InitializeComponent();

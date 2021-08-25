@@ -3,11 +3,12 @@
 namespace SaintSender.Core.Models
 
 {
-    internal struct UserAccount
+    public struct UserAccount
     {
         public UserAccount(string email, string hashedPassword)
         {
             Email = email;
+            HashedPassword = hashedPassword;
             SecureStorageAccess storageAccess = new SecureStorageAccess();
             storageAccess.SaveUser(email, hashedPassword);
         }
@@ -20,6 +21,7 @@ namespace SaintSender.Core.Models
         }
 
         public string Email { get; set; }
+        public string HashedPassword { get; private set; }
 
     }
 }
