@@ -126,7 +126,20 @@ namespace SaintSender.DesktopUI.UserControls
                 if (!mouseInside)
                     return -1;
 
-                return (int)Math.Floor((mousePosition.Y + scrollY) / (LineHeight + BorderThickness));
+                return (int)Math.Floor((mousePosition.Y + scrollY) / ItemHeight);
+            }
+        }
+
+        private float ItemHeight => LineHeight + BorderThickness;
+
+        private float ScrollMax
+        {
+            get
+            {
+                if (emails == null)
+                    return 0;
+
+                return emails.Length * ItemHeight - ViewHeight;
             }
         }
 
@@ -149,7 +162,7 @@ namespace SaintSender.DesktopUI.UserControls
         /// <param name="yPosition">The line Y position</param>
         void RenderEmailListItem(DrawingContext drawingContext, EmailData email, int index)
         {
-            float yPosition = -scrollY + index * (LineHeight + BorderThickness);
+            float yPosition = -scrollY + index * ItemHeight;
             Color backColor = ItemBackground(index);
             Color foreColor = ItemForeground(index);
 
@@ -191,6 +204,16 @@ namespace SaintSender.DesktopUI.UserControls
         }
         #endregion
 
+
+
+        #region Events
+        protected override void OnScroll(float scrollDelta)
+        {
+            scrollY -= scrollDelta;
+            scrollY = Math.Max(0, scrollY);
+            scrollY = Math.Min(ScrollMax, scrollY);
+        }
+        #endregion
 
 
         EmailData[] emails = null;
