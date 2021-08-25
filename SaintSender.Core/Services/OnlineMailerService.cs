@@ -15,36 +15,38 @@
 
         private bool userIsLoggedIn = true;
 
-        internal Pop3Client pop3Client = new Pop3Client();
-        internal SmtpClient smtpClient = new SmtpClient();
+        //internal Pop3Client pop3Client = new Pop3Client();
+        //internal SmtpClient smtpClient = new SmtpClient();
 
         private static int currentPageShown = 1;
 
         private static int mailsPerPage = 24;
 
-        public void LogInUser(string userEmail, string password)
+        /*protected override void Login(string userEmail, string password)
         {
             //Offline validating
-            /*if(account.ValidateLoginCredentials(userEmail, Hasher.Hash(password)))
+            if(account.ValidateLoginCredentials(userEmail, Hasher.Hash(password)))
             {
                 account.Email = userEmail;
                 userIsLoggedIn = true;
             } else
             {
                 throw new Exception("Login data is incorrect.");
-            }*/
+            }
 
 
-            smtpClient.Connect("smtp.gmail.com", 587, true);
+            smtpClient.Connect("smtp.gmail.com", 465, true);
             smtpClient.Authenticate(userEmail, password);
 
             pop3Client.Connect("pop.gmail.com", 995, true);
             pop3Client.Authenticate(userEmail, password);
-            Debug.WriteLine(GetMail());
-            userIsLoggedIn = true;
-        }
+            //Debug.WriteLine(LoadEmails());
+            //userIsLoggedIn = true;
 
-        public void LogOutCurrentUser()
+            LoadMails();
+        }*/
+
+        /*public override void LogOutCurrentUser()
         {
             account.Email = null;
             userIsLoggedIn = false;
@@ -54,9 +56,9 @@
 
             pop3Client.Disconnect(true);
             pop3Client.Dispose();
-        }
+        }*/
 
-        public void SendMail(EmailMessage email)
+        public override void SendMail(EmailMessage email)
         {
             if (userIsLoggedIn)
             {
@@ -71,7 +73,12 @@
                 emailMessage.Body = new TextPart("html") { Text = email.Subject };
                 try
                 {
-                     smtpClient.Send(emailMessage);
+                    using (SmtpClient smtpClient = new SmtpClient())
+                    {
+                        smtpClient.Connect("smtp.gmail.com", 465, true);
+                        smtpClient.Authenticate(UserEmail, UserPassword);
+                        smtpClient.Send(emailMessage);
+                    }
                 }
                 catch (Exception ex) //todo add another try to send email
                 {
@@ -90,22 +97,33 @@
             return message.Receiver.Contains(account.Email);
         }
 
-        public List<EmailMessage> GetMail()
+        public override void LoadMails()
         {
 
             if (userIsLoggedIn)
             {
-                List<EmailMessage> mailList = new List<EmailMessage>();
-                for (int i = (currentPageShown * mailsPerPage) - mailsPerPage; i < pop3Client.Count; i++)
+                //List<EmailMessage> mailList = new List<EmailMessage>();
+                Emails.Clear();
+
+                using (Pop3Client pop3Client = new Pop3Client())
                 {
-                    if (i == currentPageShown * mailsPerPage)
+                    pop3Client.Connect("pop.gmail.com", 995, true);
+                    pop3Client.Authenticate(UserEmail, UserPassword);
+
+                    Debug.WriteLine(pop3Client.Count);
+
+                    for (int i = (currentPageShown * mailsPerPage) - mailsPerPage; i < pop3Client.Count; i++)
                     {
-                        break;
+                        if (i == currentPageShown * mailsPerPage)
+                        {
+                            break;
+                        }
+                        var message = pop3Client.GetMessage(i);
+                        Emails.Add(new EmailMessage(message));
                     }
-                    var message = pop3Client.GetMessage(i);
-                    mailList.Add(new EmailMessage(message));
+
+                    pop3Client.Disconnect(true);
                 }
-                return mailList;
             }
             else
             {
