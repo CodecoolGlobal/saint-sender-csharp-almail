@@ -31,5 +31,20 @@ namespace SaintSender.DesktopUI.Views
         {
             DialogResult = true;
         }
+
+        private void TextboxEmail_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxEmail.Text == "Email address")
+                TextboxEmail.Text = null;
+            TextboxEmail.Foreground = new SolidColorBrush(Colors.Black);
+        }
+
+        private void TextboxEmail_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxEmail.Text == "")
+                TextboxEmail.Text = "Email address";
+            TextboxEmail.Foreground = new SolidColorBrush(Colors.DarkGray);
+        }
+
     }
 }
