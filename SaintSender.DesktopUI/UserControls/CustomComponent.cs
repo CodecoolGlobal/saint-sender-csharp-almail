@@ -15,6 +15,9 @@ namespace SaintSender.DesktopUI.UserControls
         protected virtual float PaddingHorizonal => 0;
         protected virtual float PaddingVertical => 0;
 
+        protected virtual bool RestrictedRendering => true;
+        protected virtual bool Scrollable => false;
+
         protected float InsideLeft { get; private set; } = 0;
         protected float InsideRight { get; private set; } = 0;
         protected float InsideTop { get; private set; } = 0;
@@ -27,6 +30,9 @@ namespace SaintSender.DesktopUI.UserControls
         protected float OutsideBottom { get; private set; } = 0;
         protected float OutsideWidth { get; private set; } = 0;
         protected float OutsideHeight { get; private set; } = 0;
+
+        protected Rect InsideRect => new Rect(InsideLeft, InsideTop, InsideWidth, InsideHeight);
+        protected Rect OutsideRect => new Rect(OutsideLeft, OutsideTop, OutsideWidth, OutsideHeight);
 
         protected override void OnRender(DrawingContext drawingContext)
         {
@@ -41,32 +47,37 @@ namespace SaintSender.DesktopUI.UserControls
             OutsideRight = OutsideWidth = (float)RenderSize.Width;
             OutsideBottom = OutsideHeight = (float)RenderSize.Height;
 
-            Rect screenRect = new Rect(0, 0, (float)RenderSize.Width, (float)RenderSize.Height);
+            // Mouse scroll fix
+            if (Scrollable)
+                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(1, 0, 0, 0)), null, OutsideRect);
 
-            // mouse events fix
-            drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(1, 0, 0, 0)), null, screenRect);
-
-            drawingContext.ClipRectangle(screenRect);
+            if (RestrictedRendering)
+                drawingContext.ClipRectangle(OutsideRect);
 
             Render(drawingContext);
 
-            drawingContext.ResetClip();
+            if (RestrictedRendering)
+                drawingContext.ResetClip();
         }
 
         protected abstract void Render(DrawingContext drawingContext);
 
-        protected abstract void OnScroll(float scrollDelta);
+        protected virtual void OnScroll(float scrollDelta) { /* cirip cirip */ }
 
         private bool IsMouseInBounds(MouseEventArgs e)
         {
-            Rect bounds = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
-            return bounds.Contains(e.GetPosition(this));
+            return OutsideRect.Contains(e.GetPosition(this));
         }
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
             base.OnMouseEnter(e);
             mouseInside = true;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+                mouseLeftButton = true;
+            if (e.RightButton == MouseButtonState.Pressed)
+                mouseRightButton = true;
 
             Refresh();
         }
@@ -98,19 +109,19 @@ namespace SaintSender.DesktopUI.UserControls
             mouseLeftButton = true;
             Refresh();
         }
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             base.OnMouseRightButtonDown(e);
             mouseLeftButton = false;
             Refresh();
         }
-        protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseRightButtonDown(e);
             mouseRightButton = true;
             Refresh();
         }
-        protected override void OnPreviewMouseRightButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseRightButtonUp(e);
             mouseRightButton = false;
