@@ -18,7 +18,7 @@ namespace SaintSender.Core.Models
 
         public EmailMessage(MimeMessage message)
         {
-            Debug.WriteLine(message);
+            //Debug.WriteLine(message);
             foreach (var mailbox in message.From.Mailboxes)
             {
                 Sender = mailbox.Address;
@@ -27,13 +27,13 @@ namespace SaintSender.Core.Models
             {
                 Receiver.Add(mailbox.Address);
             }
-            sentTime = message.Date.DateTime;
+            SentTime = message.Date.DateTime;
             Subject = message.Subject;
-            Body = message.HtmlBody;
+            Body = message.GetTextBody(MimeKit.Text.TextFormat.Text);
         }
 
 
-        public System.DateTime sentTime { get; }
+        public System.DateTime SentTime { get; }
         public string Sender { get; }
         public List<string> Receiver { get; set; } = new List<string>();
 
