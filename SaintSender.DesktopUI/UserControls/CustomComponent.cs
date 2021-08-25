@@ -35,10 +35,21 @@ namespace SaintSender.DesktopUI.UserControls
             ViewWidth = ViewRight - ViewLeft;
             ViewHeight = ViewBottom - ViewTop;
 
+            Rect screenRect = new Rect(0, 0, (float)RenderSize.Width, (float)RenderSize.Height);
+
+            // mouse events fix
+            drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(1, 0, 0, 0)), null, screenRect);
+
+            drawingContext.ClipRectangle(screenRect);
+
             Render(drawingContext);
+
+            drawingContext.ResetClip();
         }
 
         protected abstract void Render(DrawingContext drawingContext);
+
+        protected abstract void OnScroll(float scrollDelta);
 
         private bool IsMouseInBounds(MouseEventArgs e)
         {
@@ -99,11 +110,20 @@ namespace SaintSender.DesktopUI.UserControls
             mouseRightButton = false;
             Refresh();
         }
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+
+            if (e.Delta != 0)
+            {
+                OnScroll(e.Delta);
+                Refresh();
+            }
+        }
 
         protected void Refresh()
         {
             InvalidateVisual();
-            //UpdateLayout();
         }
     }
 }
