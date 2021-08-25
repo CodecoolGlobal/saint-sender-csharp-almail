@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SaintSender.Core.Models
 {
-    class MailerClient
+    class MailerService
     {
         public UserAccount account;
         private bool userIsLoggedIn = false;

@@ -57,7 +57,7 @@
   <ItemGroup>
     <Compile Include="Models\Email.cs" />
     <Compile Include="Models\Hasher.cs" />
-    <Compile Include="Models\MailerClient.cs" />
+    <Compile Include="Services\MailerService.cs" />
     <Compile Include="Models\SecureStorageAccess.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Services\GreetService.cs" />
