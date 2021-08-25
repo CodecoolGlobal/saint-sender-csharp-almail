@@ -76,8 +76,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserControls\CustomComponent.cs" />
-    <Compile Include="UserControls\DrawingContextExtension.cs" />
-    <Compile Include="UserControls\DrawUtil.cs" />
+    <Compile Include="Utility\DrawingContextExtension.cs" />
+    <Compile Include="Utility\DrawUtil.cs" />
     <Compile Include="UserControls\EmailDisplay.cs" />
     <Compile Include="UserControls\IconButton.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
