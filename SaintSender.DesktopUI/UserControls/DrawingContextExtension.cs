@@ -14,7 +14,15 @@ namespace SaintSender.DesktopUI.UserControls
         /// <param name="height">Rectangle height</param>
         public static void ClipRectangle(this DrawingContext context, float x, float y, float width, float height)
         {
-            context.PushClip(new RectangleGeometry(new Rect((double)x, (double)y, (double)width, (double)height)));
+            context.ClipRectangle(new Rect(x, y, width, height));
+        }
+        /// <summary>
+        /// Sets a clip rectangle for restrict drawing area.
+        /// </summary>
+        /// <param name="rectangle">Rectangle</param>
+        public static void ClipRectangle(this DrawingContext context, Rect rectangle)
+        {
+            context.PushClip(new RectangleGeometry(rectangle));
         }
 
         /// <summary>
