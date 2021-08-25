@@ -21,7 +21,7 @@ namespace SaintSender.DesktopUI.Views
     {
 
         public string emailAddress => TextboxEmail.Text;
-        public string password => TextboxPassword.Text;
+        public string password => Passwordbox.Password;
         public LoginWindow()
         {
             InitializeComponent();
@@ -46,18 +46,30 @@ namespace SaintSender.DesktopUI.Views
             TextboxEmail.Foreground = new SolidColorBrush(Colors.DarkGray);
         }
 
-        private void TextboxPassword_GotFocus(object sender, RoutedEventArgs e)
+        private void PasswordboxWatermark_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (TextboxPassword.Text == "Password")
-                TextboxPassword.Text = null;
-            TextboxPassword.Foreground = new SolidColorBrush(Colors.Black);
+            PasswordboxWatermark.Visibility = System.Windows.Visibility.Collapsed;
+            Passwordbox.Visibility = System.Windows.Visibility.Visible;
+            Passwordbox.Focus();
         }
 
-        private void TextboxPassword_LostFocus(object sender, RoutedEventArgs e)
+        private void Passwordbox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (TextboxPassword.Text == "")
-                TextboxPassword.Text = "Password";
-            TextboxPassword.Foreground = new SolidColorBrush(Colors.DarkGray);
+            if (string.IsNullOrEmpty(Passwordbox.Password))
+            {
+                Passwordbox.Visibility = System.Windows.Visibility.Collapsed;
+                PasswordboxWatermark.Visibility = System.Windows.Visibility.Visible;
+                Passwordbox.Password = "Password";
+                Passwordbox.Foreground = new SolidColorBrush(Colors.DarkGray);
+            }
+            Passwordbox.Foreground = new SolidColorBrush(Colors.DarkGray);
+        }
+
+        private void Passwordbox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (Passwordbox.Password == "Password")
+                Passwordbox.Password = null;
+            Passwordbox.Foreground = new SolidColorBrush(Colors.Black);
         }
     }
 }
