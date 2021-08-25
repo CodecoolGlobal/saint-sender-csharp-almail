@@ -87,6 +87,7 @@ namespace SaintSender.DesktopUI.UserControls
             get => (float)GetValue(SidePaddingProperty);
             set => SetValue(SidePaddingProperty, value);
         }
+        protected override float PaddingHorizonal => SidePadding;
         #endregion
 
 
@@ -176,7 +177,7 @@ namespace SaintSender.DesktopUI.UserControls
         private float scrollY = 0;
         private float ShrinkWidth => InsideWidth - PaddingHorizonal * 2;
 
-        protected override float PaddingHorizonal => SidePadding;
+        protected override bool Scrollable => true;
 
         private int HoverIndex
         {
