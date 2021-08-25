@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace SaintSender.DesktopUI.UserControls
+namespace SaintSender.DesktopUI.Utility
 {
     internal static class DrawingContextExtension
     {

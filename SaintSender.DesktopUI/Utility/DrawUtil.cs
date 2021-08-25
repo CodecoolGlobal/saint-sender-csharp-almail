@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace SaintSender.DesktopUI.UserControls
+namespace SaintSender.DesktopUI.Utility
 {
     class DrawUtil
     {
