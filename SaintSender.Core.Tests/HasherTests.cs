@@ -6,7 +6,7 @@ namespace SaintSender.Core.Tests
     [TestFixture]
     class HasherTests
     {
-        private Hasher hasher;
+        /*private Hasher hasher;
         [SetUp]
         public void SetUp()
         {
@@ -23,6 +23,6 @@ namespace SaintSender.Core.Tests
         public void TearDown()
         {
             hasher = null;
-        }
+        }*/
     }
 }
