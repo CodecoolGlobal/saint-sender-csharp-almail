@@ -46,5 +46,18 @@ namespace SaintSender.DesktopUI.Views
             TextboxEmail.Foreground = new SolidColorBrush(Colors.DarkGray);
         }
 
+        private void TextboxPassword_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxPassword.Text == "Password")
+                TextboxPassword.Text = null;
+            TextboxPassword.Foreground = new SolidColorBrush(Colors.Black);
+        }
+
+        private void TextboxPassword_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxPassword.Text == "")
+                TextboxPassword.Text = "Password";
+            TextboxPassword.Foreground = new SolidColorBrush(Colors.DarkGray);
+        }
     }
 }
