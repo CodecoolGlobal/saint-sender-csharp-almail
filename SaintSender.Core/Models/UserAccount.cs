@@ -19,7 +19,7 @@ namespace SaintSender.Core.Models
             return userData[email] == hashedPassword;
         }
 
-        public string Email { get; private set; }
+        public string Email { get; set; }
 
     }
 }

@@ -9,7 +9,7 @@ namespace SaintSender.Core.Models
     {
         private static string HashKey = "UC80Dp2qRF70PVoCinjwp6QegPMKCyZZfd3FNulJceIfqHzVUSCIcRfhJNYh";
 
-        public string Hash(string stringToHash)
+        public static string Hash(string stringToHash)
         {
             var encoding = new ASCIIEncoding();
             byte[] keyByte = encoding.GetBytes(HashKey);
