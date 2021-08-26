@@ -96,8 +96,6 @@ namespace SaintSender.DesktopUI.UserControls
         #region Rendering
         protected override void Render(DrawingContext drawingContext)
         {
-            drawingContext.DrawText(DrawUtil.FormatText(string.Format("{1}px{0}{2}{0}{3}", "\n", scrollY, OutsideHeight, AllEmailsHeight), Brushes.Red, 15, true), new Point(16, 16));
-
             for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
                 RenderEmailListItem(drawingContext, emails[emailIndex], emailIndex);
 
