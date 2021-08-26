@@ -132,12 +132,14 @@ namespace SaintSender.DesktopUI.UserControls
             drawingContext.DrawText(titleText, new Point(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
             drawingContext.ResetClip();
 
+            
             if (titleText.Width > ShrinkWidth * TitleWidth)
                 drawingContext.DrawGradient(new Rect(InsideLeft + ShrinkWidth * (DateWidth + TitleWidth), yPosition, SidePadding * 2, LineHeight), new Color[] { DrawUtil.ColorAlpha(backColor, 0), DrawUtil.ColorAlpha(backColor, 1), DrawUtil.ColorAlpha(backColor, 0) });
+            
 
             FormattedText bodyText = DrawUtil.FormatText(email.Body, new SolidColorBrush(foreColor), 12);
             drawingContext.DrawText(bodyText, new Point(InsideLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : yPosition + 8));
-
+            
             drawingContext.ResetClip();
         }
 
@@ -184,7 +186,15 @@ namespace SaintSender.DesktopUI.UserControls
         /// <param name="emailList">The array of the EmailMessages</param>
         public void UpdateEmailList(EmailMessage[] emailList)
         {
-            emails = emailList;
+            emails = new EmailMessage[emailList.Length];
+
+            for (int i=0; i < emailList.Length; i++)
+            {
+                emails[i] = emailList[i].Clone();
+                emails[i].Subject = DrawUtil.TextMaxWidth(emails[i].Subject, 20);
+                emails[i].Body = DrawUtil.TextMaxHeight(emails[i].Body, 3, "[...]", 200);
+            }
+
             Refresh();
         }
         #endregion
@@ -192,10 +202,17 @@ namespace SaintSender.DesktopUI.UserControls
 
 
         #region Private & Protected
+        EmailMessage[] emails = new EmailMessage[0];
+
+
         private float scrollY = 0;
         private float ShrinkWidth => InsideWidth - PaddingHorizonal * 2;
 
         protected override bool Scrollable => true;
+
+        protected override bool HasFramerate => true;
+
+        protected override bool DebugDraw => false;
 
         private int HoverIndex
         {
@@ -236,9 +253,5 @@ namespace SaintSender.DesktopUI.UserControls
             return ListItemForeground;
         }
         #endregion
-
-
-
-        EmailMessage[] emails = new EmailMessage[0];
     }
 }
