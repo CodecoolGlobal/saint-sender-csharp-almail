@@ -38,6 +38,11 @@ namespace SaintSender.DesktopUI.ViewModels
             _mailService.LoadMails();
         }
 
+        public void UpdateEmailReadStatus(int emailIndex, bool readStatus)
+        {
+            _mailService.ChangeEmailReadStatus(emailIndex, readStatus);
+        }
+
         /// <summary>
         /// Returns an EmailMessage array
         /// </summary>

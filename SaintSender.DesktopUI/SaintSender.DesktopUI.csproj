@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UserControls\EmailReadStatusEvent.cs" />
     <Compile Include="Views\WriteWindow.xaml.cs">
       <DependentUpon>WriteWindow.xaml</DependentUpon>
     </Compile>

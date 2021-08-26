@@ -136,6 +136,20 @@ namespace SaintSender.Core.Models
                 return false;
             }
         }
+
+        public bool Compare(EmailMessage other)
+        {
+            if (other == null)
+                return false;
+
+            if (other.Sender != Sender)
+                return false;
+
+            if (other.SentTime.Ticks != SentTime.Ticks)
+                return false;
+
+            return true;
+        }
     }
 
 

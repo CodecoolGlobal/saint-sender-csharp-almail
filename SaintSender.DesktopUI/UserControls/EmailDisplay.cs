@@ -130,7 +130,7 @@ namespace SaintSender.DesktopUI.UserControls
             drawingContext.ResetClip();
 
             drawingContext.ClipRectangle(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition, ShrinkWidth * TitleWidth, LineHeight);
-            FormattedText titleText = DrawUtil.FormatText(email.Subject, new SolidColorBrush(foreColor), 14, true);
+            FormattedText titleText = DrawUtil.FormatText(email.Subject, new SolidColorBrush(foreColor), 14, !email.IsRead);
             drawingContext.DrawText(titleText, new Point(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
             drawingContext.ResetClip();
 
@@ -168,7 +168,7 @@ namespace SaintSender.DesktopUI.UserControls
 
 
         #region Events
-        protected override void OnScroll(float scrollDelta)
+        protected override void ScrollEvent(float scrollDelta)
         {
             scrollY -= scrollDelta;
             scrollY = Math.Max(0, scrollY);
@@ -177,11 +177,31 @@ namespace SaintSender.DesktopUI.UserControls
             if (AllEmailsHeight <= OutsideHeight)
                 scrollY = 0;
         }
+
+        protected override void ClickEvent()
+        {
+            if (HoverIndex == -1)
+                return;
+
+            int emailIndex = GetEmailIndex(emails[HoverIndex]);
+            if (emailIndex == -1)
+                return;
+
+            openedEmail = allEmails[emailIndex];
+            openedEmail.IsRead = true;
+
+            if (EmailReadStatusChanged != null)
+                EmailReadStatusChanged.Invoke(this, new EmailReadStatusEventArgs(emailIndex, openedEmail.IsRead));
+
+            UpdateFiltering();
+        }
         #endregion
 
 
 
         #region Public
+        public event EventHandler<EmailReadStatusEventArgs> EmailReadStatusChanged = null;
+
         /// <summary>
         /// Updates visible email list
         /// </summary>
@@ -193,8 +213,8 @@ namespace SaintSender.DesktopUI.UserControls
             for (int i=0; i < emailList.Length; i++)
             {
                 allEmails[i] = emailList[i].Clone();
-                allEmails[i].Subject = DrawUtil.TextMaxWidth(allEmails[i].Subject, 20);
-                allEmails[i].Body = DrawUtil.TextMaxHeight(allEmails[i].Body, 3, "[...]", 200);
+                /*allEmails[i].Subject = DrawUtil.TextMaxWidth(allEmails[i].Subject, 20);
+                allEmails[i].Body = DrawUtil.TextMaxHeight(allEmails[i].Body, 3, "[...]", 200);*/
             }
 
             UpdateFiltering();
@@ -249,6 +269,8 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region Private & Protected
         string searchString = "";
+
+        EmailMessage openedEmail = null;
 
         MailFilter emailFilter = MailFilter.Received;
 
@@ -314,6 +336,16 @@ namespace SaintSender.DesktopUI.UserControls
             return ListItemForeground;
         }
 
+        private int GetEmailIndex(EmailMessage message)
+        {
+            for (int i = 0; i < allEmails.Length; i++)
+            {
+                if (allEmails[i].Compare(message))
+                    return i;
+            }
+            return -1;
+        }
+
         private void Navigate(int direction)
         {
             scrollY = 0;
@@ -372,7 +404,9 @@ namespace SaintSender.DesktopUI.UserControls
             int actualIndex = 0;
             for (int index = startIndex; index < endIndex; index++)
             {
-                emails[actualIndex] = searchedEmails[searchedEmails.Length - index - 1];
+                emails[actualIndex] = searchedEmails[searchedEmails.Length - index - 1].Clone();
+                emails[actualIndex].Subject = DrawUtil.TextMaxWidth(emails[actualIndex].Subject, 20);
+                emails[actualIndex].Body = DrawUtil.TextMaxHeight(emails[actualIndex].Body, 3, "[...]", 200);
                 actualIndex++;
             }
         }
