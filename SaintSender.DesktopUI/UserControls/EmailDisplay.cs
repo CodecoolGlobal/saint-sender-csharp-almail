@@ -220,6 +220,10 @@ namespace SaintSender.DesktopUI.UserControls
         public bool CanNavigatePrevious => currentPage > 0;
         public string PaginationText => string.Format("{0} / {1} ({2} emails)", currentPage + 1, Pages, searchedEmails.Length);
 
+        /// <summary>
+        /// Filter the email list by the sender and receiver (Sent, Received, All)
+        /// </summary>
+        /// <param name="filter">Sent / Received / All</param>
         public void FilterEmails(MailFilter filter)
         {
             scrollY = 0;
