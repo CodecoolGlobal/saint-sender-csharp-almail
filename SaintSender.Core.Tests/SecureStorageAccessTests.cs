@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Linq;
 
 namespace SaintSender.Core.Tests
 {
@@ -14,6 +15,9 @@ namespace SaintSender.Core.Tests
 
         IsolatedStorageFile isoStore;
         SecureStorageAccess storageAccess;
+        List<EmailMessage> emailMessages = new List<EmailMessage>()
+        { new EmailMessage("Sender", "Receiver", "Subject", "Body", "HTML") };
+
         [SetUp]
         public void SetUp()
         {
@@ -74,6 +78,24 @@ namespace SaintSender.Core.Tests
             {
                 Assert.Pass();
             }
+        }
+        [Test]
+        public void SaveUserEmailsSuccessful()
+        {
+            storageAccess.SaveUserEmails("ThisUserName", emailMessages);
+            Assert.Pass();
+        }
+
+        [Test]
+        public void ReadUserEmailsSuccessful()
+        {
+            Console.WriteLine("Original: " + emailMessages.ToString());
+            string jsonString = string.Join("", storageAccess.ReadData("ThisUserName"));
+
+            List<EmailMessage> serializedMails = storageAccess.GetUserEmails("ThisUserName");
+            Assert.True(Enumerable.SequenceEqual(serializedMails, emailMessages));
+
+            
         }
 
 

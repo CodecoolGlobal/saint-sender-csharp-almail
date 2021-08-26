@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 
 namespace SaintSender.Core.Models
-
 {
-    internal struct UserAccount
+    public struct UserAccount
     {
-        public UserAccount(string email, string hashedPassword)
+        public UserAccount(string email, string encryptedPassword)
         {
             Email = email;
+            EncryptedPassword = encryptedPassword;
             SecureStorageAccess storageAccess = new SecureStorageAccess();
-            storageAccess.SaveUser(email, hashedPassword);
+            storageAccess.SaveUser(email, EncryptedPassword);
         }
 
         public bool ValidateLoginCredentials(string email, string hashedPassword)
@@ -20,6 +20,7 @@ namespace SaintSender.Core.Models
         }
 
         public string Email { get; set; }
+        public string EncryptedPassword { get; private set; }
 
     }
 }

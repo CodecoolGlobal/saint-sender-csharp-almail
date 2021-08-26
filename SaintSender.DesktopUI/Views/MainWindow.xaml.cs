@@ -1,6 +1,8 @@
 ﻿using SaintSender.DesktopUI.ViewModels;
 using SaintSender.DesktopUI.Views;
 using System.Windows;
+using System.Windows.Forms;
+
 
 namespace SaintSender.DesktopUI
 {
@@ -15,11 +17,44 @@ namespace SaintSender.DesktopUI
         {
             // set DataContext to the ViewModel object
             _vm = new MainWindowViewModel();
+           
             DataContext = _vm;
             InitializeComponent();
 
+            Login();
+        }
+
+        private void Login()
+        {
+            EmailDisplayList.Visibility = Visibility.Hidden;
+
             LoginWindow loginWindow = new LoginWindow();
-            loginWindow.ShowDialog();
+            bool? loginResult = loginWindow.ShowDialog();
+            if (loginResult.HasValue || loginResult.Value)
+            {
+                if (_vm.LogIn(loginWindow.emailAddress, loginWindow.password))
+                {
+                    EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
+                    EmailDisplayList.Visibility = Visibility.Visible;
+                }
+                else
+                    Login();
+            }
+            // TODO: quit application if X clicked in login form
+            /*else
+                Application.Exit();*/
+        }
+
+        private void ButtonReload_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.RefreshMails();
+            EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
+        }
+
+        private void ButtonLogout_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.LogOut();
+            Login();
         }
     }
 }

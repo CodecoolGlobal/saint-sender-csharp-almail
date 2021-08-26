@@ -19,6 +19,9 @@ namespace SaintSender.DesktopUI.Views
     /// </summary>
     public partial class LoginWindow : Window
     {
+
+        public string emailAddress => TextboxEmail.Text;
+        public string password => Passwordbox.Password;
         public LoginWindow()
         {
             InitializeComponent();
@@ -27,6 +30,46 @@ namespace SaintSender.DesktopUI.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
+        }
+
+        private void TextboxEmail_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxEmail.Text == "Email address")
+                TextboxEmail.Text = null;
+            TextboxEmail.Foreground = new SolidColorBrush(Colors.Black);
+        }
+
+        private void TextboxEmail_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxEmail.Text == "")
+                TextboxEmail.Text = "Email address";
+            TextboxEmail.Foreground = new SolidColorBrush(Colors.DarkGray);
+        }
+
+        private void PasswordboxWatermark_GotFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordboxWatermark.Visibility = System.Windows.Visibility.Collapsed;
+            Passwordbox.Visibility = System.Windows.Visibility.Visible;
+            Passwordbox.Focus();
+        }
+
+        private void Passwordbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(Passwordbox.Password))
+            {
+                Passwordbox.Visibility = System.Windows.Visibility.Collapsed;
+                PasswordboxWatermark.Visibility = System.Windows.Visibility.Visible;
+                Passwordbox.Password = "Password";
+                Passwordbox.Foreground = new SolidColorBrush(Colors.DarkGray);
+            }
+            Passwordbox.Foreground = new SolidColorBrush(Colors.DarkGray);
+        }
+
+        private void Passwordbox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (Passwordbox.Password == "Password")
+                Passwordbox.Password = null;
+            Passwordbox.Foreground = new SolidColorBrush(Colors.Black);
         }
     }
 }

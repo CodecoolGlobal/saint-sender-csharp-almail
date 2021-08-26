@@ -1,28 +1,28 @@
 ﻿using NUnit.Framework;
 using SaintSender.Core.Models;
+using System;
 
 namespace SaintSender.Core.Tests
 {
     [TestFixture]
     class HasherTests
     {
-        /*private Hasher hasher;
-        [SetUp]
-        public void SetUp()
-        {
-            hasher = new Hasher();
-        }
-
         [Test]
         public void HasherReturnsCorrectHash()
         {
-            Assert.AreEqual(hasher.Hash("password"), "nddrXNRviNxQKFNy/tAn0TVtVH2IpfaXmWKuqXtC4bk=");
+            Assert.AreEqual(Hasher.Hash("password"), "nddrXNRviNxQKFNy/tAn0TVtVH2IpfaXmWKuqXtC4bk=");
+        }
+        
+        [Test]
+        public void EncodingWorksCorrectly()
+        {
+            Assert.AreEqual("aY+iFC7eLraKwtD2P/2Gv/E77VfMqxzq", Hasher.Encode("MyPasswordString"));
         }
 
-        [TearDown]
-        public void TearDown()
+        [Test]
+        public void DecodingWorksCorrectly()
         {
-            hasher = null;
-        }*/
+            Assert.AreEqual("MyPasswordString", Hasher.Decode("aY+iFC7eLraKwtD2P/2Gv/E77VfMqxzq"));
+        }
     }
 }
