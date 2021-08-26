@@ -9,8 +9,9 @@ namespace SaintSender.Core.Models
     [Serializable]
     public class EmailMessage
     {
-        public EmailMessage(string sender, string receiver, string subject, string body)
+        public EmailMessage(string sender, string receiver, string subject, string body, string html)
         {
+            HTMLBody = html;
             Sender = sender;
             Receiver.Add(receiver);
             Subject = subject;
@@ -19,13 +20,15 @@ namespace SaintSender.Core.Models
 
 
         [JsonConstructor]
-        public EmailMessage(string sentTime ,string sender, string[] receiver, string subject, string body)
+        public EmailMessage(string sentTime ,string sender, string[] receiver, string subject, string body, string html, bool isRead)
         {
             SentTime = DateTime.Parse(sentTime);
             Sender = sender;
             Receiver.AddRange(receiver);
             Subject = subject;
             Body = body;
+            HTMLBody = html;
+            IsRead = isRead;
         }
         public EmailMessage(MimeMessage message)
         {
@@ -38,6 +41,7 @@ namespace SaintSender.Core.Models
             SentTime = message.Date.DateTime;
             Subject = message.Subject;
             Body = message.GetTextBody(MimeKit.Text.TextFormat.Text);
+            HTMLBody = message.HtmlBody;
         }
 
         public System.DateTime SentTime { get; }
@@ -48,7 +52,11 @@ namespace SaintSender.Core.Models
 
         public string Subject { get; }
 
+        public bool IsRead { get; set; }
+
         public string Body { get; }
+
+        public string HTMLBody { get; set; }
 
         public override string ToString()
         {

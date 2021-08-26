@@ -12,10 +12,6 @@
     {
         public UserAccount account;
 
-        private static int currentPageShown = 1;
-
-        private static int MAILS_PER_PAGE = 24;
-
         public override void SendMail(EmailMessage email)
         {
             if (UserLoggedIn)
@@ -85,11 +81,8 @@
                         return false;
                     }
 
-                    for (int i = (currentPageShown * MAILS_PER_PAGE) - MAILS_PER_PAGE; i < pop3Client.Count; i++)
+                    for (int i = 0 ; i < pop3Client.Count; i++)
                     {
-                        if (i == currentPageShown * MAILS_PER_PAGE)
-                            break;
-
                         var message = pop3Client.GetMessage(i);
                         Emails.Add(new EmailMessage(message));
                     }
@@ -101,8 +94,6 @@
             }
             else
                 return true;
-
-            return false;
         }
     }
 }

@@ -81,10 +81,6 @@ namespace SaintSender.Core.Models
                 {
                     WriteData("UserData", new List<string> { email, encryptedPassword }, FileMode.Append);
                 }
-                else
-                {
-                    throw new Exception($"The e-mail address {email} is already taken.");
-                }
             }
             else
             {
