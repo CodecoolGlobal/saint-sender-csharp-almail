@@ -5,7 +5,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
-
+using System.Windows.Media;
 
 namespace SaintSender.DesktopUI
 {
@@ -15,6 +15,7 @@ namespace SaintSender.DesktopUI
     public partial class MainWindow : Window
     {
         private MainWindowViewModel _vm;
+        public string searchText => TextboxSearch.Text;
 
         public MainWindow()
         {
@@ -87,7 +88,7 @@ namespace SaintSender.DesktopUI
             if (result.HasValue && result.Value)
                 _vm.SendMail(writeWindow.Receiver, writeWindow.Subject, writeWindow.Body);
         }
-
+        
         private void ButtonPreviousPage_OnClick(object sender, EventArgs e)
         {
             EmailDisplayList.NavigatePagePrevious();
@@ -98,6 +99,20 @@ namespace SaintSender.DesktopUI
         {
             EmailDisplayList.NavigatePageNext();
             UpdatePagination();
+        }
+        
+        private void TextboxSearch_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxSearch.Text == "")
+                TextboxSearch.Text = "Search...";
+            TextboxSearch.Foreground = new SolidColorBrush(Colors.DarkGray);
+        }
+
+        private void TextboxSearch_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (TextboxSearch.Text == "Search...")
+                TextboxSearch.Text = null;
+            TextboxSearch.Foreground = new SolidColorBrush(Colors.Black);
         }
     }
 }

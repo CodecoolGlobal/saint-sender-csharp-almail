@@ -16,7 +16,7 @@
                 <RowDefinition Height="84*"/>
                 <RowDefinition Height="29*"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="TextboxEmail" Height="23" Margin="20,20,23,0" TextWrapping="Wrap" Text="Email address" VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" LostFocus="TextboxEmail_LostFocus" GotFocus="TextboxEmail_GotFocus" TextChanged="TextboxEmail_TextChanged"/>
+            <TextBox x:Name="TextboxEmail" Height="23" Margin="20,20,23,0" TextWrapping="Wrap" Text="Email address" VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" LostFocus="TextboxEmail_LostFocus" GotFocus="TextboxEmail_GotFocus" TextChanged="TextboxEmail_TextChanged" KeyDown="TextboxEmail_KeyDown"/>
             <PasswordBox x:Name="Passwordbox" Password="Password" Height="23" Margin="20,48,23,0" VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" LostFocus="Passwordbox_LostFocus" GotFocus="Passwordbox_GotFocus" PasswordChanged="Passwordbox_PasswordChanged"/>
             <TextBox x:Name="PasswordboxWatermark" Height="23" Margin="20,48,23,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" GotFocus="PasswordboxWatermark_GotFocus" />
             <CheckBox Margin="20,76,98,12.8" Grid.RowSpan="2" FontSize="8">Remember me </CheckBox>
