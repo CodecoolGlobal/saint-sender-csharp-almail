@@ -53,51 +53,59 @@
         public override bool LoadMails()
         {
             SecureStorageAccess storageAccess = new SecureStorageAccess();
+
             Emails.Clear();
+
+            if (!UserLoggedIn)
+                return true;
+
             if (IsConnectedToInternet())
-                {
+            {
                 Debug.WriteLine("Getting emails from online source");
-                    Emails.AddRange(storageAccess.GetUserEmails(UserEmail));
-                    using (Pop3Client pop3Client = new Pop3Client())
-                    {
-                        pop3Client.Connect("pop.gmail.com", 995, true);
 
-                        try
-                        {
-                        pop3Client.Authenticate(UserEmail, UserPassword);
+                Emails.AddRange(storageAccess.GetUserEmails(UserEmail));
 
-                        }
-                        catch (AuthenticationException)
-                        {
-                            MessageBox.Show("Invalid user credentials.");
-                            LogOutCurrentUser();
-                            return false;
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Unknown error");
-                            LogOutCurrentUser();
-                            return false;
-                        }
-                        
-                        for (int i = 0; i < pop3Client.Count; i++)
-                        {
-                            var message = new EmailMessage(pop3Client.GetMessage(i));
-                            if (!Emails.Contains(message))
-                                Emails.Add(message);
-                        }
-
-                        pop3Client.Disconnect(true);
-                        storageAccess.SaveUserEmails(UserEmail, Emails);
-                        return true;
-                    }
-                }
-                else if (UserAccount.ValidateLoginCredentials(UserEmail, Hasher.Encode(UserPassword)))
+                using (Pop3Client pop3Client = new Pop3Client())
                 {
+                    pop3Client.Connect("pop.gmail.com", 995, true);
+
+                    try
+                    {
+                        pop3Client.Authenticate(UserEmail, UserPassword);
+                    }
+                    catch (AuthenticationException)
+                    {
+                        MessageBox.Show("Invalid user credentials.");
+                        LogOutCurrentUser();
+                        return false;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unknown error");
+                        LogOutCurrentUser();
+                        return false;
+                    }
+                        
+                    for (int i = 0; i < pop3Client.Count; i++)
+                    {
+                        var message = new EmailMessage(pop3Client.GetMessage(i));
+                        if (!Emails.Contains(message))
+                            Emails.Add(message);
+                    }
+
+                    pop3Client.Disconnect(true);
+                    storageAccess.SaveUserEmails(UserEmail, Emails);
+
+                    return true;
+                }
+            }
+            else if (UserAccount.ValidateLoginCredentials(UserEmail, Hasher.Encode(UserPassword)))
+            {
                 Debug.WriteLine("Getting emails from offline source");
                 Emails.AddRange(storageAccess.GetUserEmails(UserEmail));
                 return true;
-                }
+            }
+
             return false;
         }
     }
