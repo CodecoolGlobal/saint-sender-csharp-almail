@@ -8,6 +8,7 @@
     using SaintSender.Core.Models;
     using System.Windows.Forms;
     using System.Diagnostics;
+    using System.Text.RegularExpressions;
 
     public class OnlineMailerService : IMailerClient
     {
@@ -66,9 +67,20 @@
                     }
                     catch (AuthenticationException)
                     {
-                        MessageBox.Show("Invalid user credentials.");
-                        LogOutCurrentUser();
-                        return false;
+                        Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                        Match match = regex.Match(UserEmail);
+                        if (match.Success)
+                        {
+                            MessageBox.Show("Invalid user credentials.");
+                            LogOutCurrentUser();
+                            return false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Incorrect email format.");
+                            LogOutCurrentUser();
+                            return false;
+                        }
                     }
                     catch
                     {
