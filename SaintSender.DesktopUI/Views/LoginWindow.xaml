@@ -6,12 +6,15 @@
         xmlns:local="clr-namespace:SaintSender.DesktopUI.Views"
         xmlns:usercontrols="clr-namespace:SaintSender.DesktopUI.UserControls"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="300" Width="500" ResizeMode="NoResize" Background="Black" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="Login" Height="400" Width="600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Window.Background>
+        <ImageBrush ImageSource="/SaintSender.DesktopUI;component/Resources/Images/main_background_4.jpg" Stretch="UniformToFill"/>
+    </Window.Background>
     <Grid x:Name="GridBackground">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="PanelModal" HorizontalAlignment="Center" Height="113" Margin="0" VerticalAlignment="Center" Width="220" Background="White">
+        <Grid x:Name="PanelModal" HorizontalAlignment="Center" Height="113" Margin="0" VerticalAlignment="Center" Width="220" Background="#CCFFFFFF">
             <Grid.RowDefinitions>
                 <RowDefinition Height="84*"/>
                 <RowDefinition Height="29*"/>
@@ -19,7 +22,7 @@
             <TextBox x:Name="TextboxEmail" Height="23" Margin="20,20,23,0" TextWrapping="Wrap" Text="Email address" VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" LostFocus="TextboxEmail_LostFocus" GotFocus="TextboxEmail_GotFocus" TextChanged="TextboxEmail_TextChanged" KeyDown="TextboxEmail_KeyDown"/>
             <PasswordBox x:Name="Passwordbox" Password="Password" Height="23" Margin="20,48,23,0" VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" LostFocus="Passwordbox_LostFocus" GotFocus="Passwordbox_GotFocus" PasswordChanged="Passwordbox_PasswordChanged"/>
             <TextBox x:Name="PasswordboxWatermark" Height="23" Margin="20,48,23,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" GotFocus="PasswordboxWatermark_GotFocus" />
-            <CheckBox Margin="20,76,98,12.8" Grid.RowSpan="2" FontSize="8">Remember me </CheckBox>
+            <CheckBox Margin="20,76,98,12.8" Grid.RowSpan="2" FontSize="8">Remember me</CheckBox>
             <usercontrols:IconButton x:Name="LoginButton" Text="Login" HorizontalAlignment="Left" Margin="122,76,0,0" VerticalAlignment="Top" Width="75" IsDefault="True" Click="Button_Click" Background="Black" Foreground="White" Grid.RowSpan="2"/>
         </Grid>
     </Grid>

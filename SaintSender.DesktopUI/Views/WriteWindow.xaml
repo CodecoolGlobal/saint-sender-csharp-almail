@@ -6,17 +6,17 @@
         xmlns:local="clr-namespace:SaintSender.DesktopUI.Views"
         xmlns:UserControls="clr-namespace:SaintSender.DesktopUI.UserControls" x:Class="SaintSender.DesktopUI.Views.WriteWindow"
         mc:Ignorable="d"
-        Title="WriteWindow" Height="450" Width="800" MinWidth="600" MinHeight="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        Title="WriteWindow" Height="450" Width="800" MinWidth="600" MinHeight="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Background="#FFCDCDCD">
     <Grid>
         <Grid x:Name="GridMain" Margin="0">
             <Label x:Name="LabelTo" Content="To:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxTo" Height="23" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="774"/>
+            <TextBox x:Name="TextBoxTo" Height="23" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="774" BorderBrush="Black"/>
             <Label x:Name="LabelSubject" Content="Subject:" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxSubject" Height="23" Margin="10,102,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="774"/>
+            <TextBox x:Name="TextBoxSubject" Height="23" Margin="10,102,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="774" BorderBrush="Black"/>
             <Label x:Name="LabelMessage" Content="Message:" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
-            <UserControls:AdvancedButton x:Name="ButtonSend" Height="22" Margin="684,390,10,10" VerticalAlignment="Bottom" Width="100" HorizontalAlignment="Right" Text="Send" Background="Black" Foreground="White" HoverBackground="#FF3A3A3A" PressedBackground="White" PressedForeground="Black" OnClick="ButtonSend_OnClick"/>
+            <UserControls:AdvancedButton x:Name="ButtonSend" Height="22" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" HorizontalAlignment="Right" Text="Send" Background="Black" Foreground="White" HoverBackground="#FF3A3A3A" PressedBackground="White" PressedForeground="Black" OnClick="ButtonSend_OnClick"/>
             <UserControls:AdvancedButton x:Name="ButtonCancel" Height="22" Margin="0,0,115,10" VerticalAlignment="Bottom" Width="100" HorizontalAlignment="Right" Text="Cancel" Background="#FF646464" Foreground="White" HoverBackground="#FF3A3A3A" PressedBackground="White" PressedForeground="Black" OnClick="ButtonCancel_OnClick"/>
-            <RichTextBox x:Name="TextareaMessage" Margin="10,176,10,37" Width="774">
+            <RichTextBox x:Name="TextareaMessage" Margin="10,176,10,37" Width="774" BorderBrush="Black">
                 <FlowDocument>
                     <Paragraph>
                         <Run Text="RichTextBox"/>
