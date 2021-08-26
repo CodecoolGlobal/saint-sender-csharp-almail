@@ -56,5 +56,17 @@ namespace SaintSender.DesktopUI
             _vm.LogOut();
             Login();
         }
+
+        private void ButtonWrite_Click(object sender, RoutedEventArgs e)
+        {
+            WriteWindow writeWindow = new WriteWindow();
+            bool? result = writeWindow.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                // Receiver: writeWindow.Receiver
+                // Subject: writeWindow.Subject
+                // Body: writeWindow.Body
+            }
+        }
     }
 }
