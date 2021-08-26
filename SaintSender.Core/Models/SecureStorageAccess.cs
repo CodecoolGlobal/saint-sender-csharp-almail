@@ -62,13 +62,13 @@ namespace SaintSender.Core.Models
         /// <param name="email">User email</param>
         /// <param name="hashedPassword">User password as hash</param>
 
-        public void SaveUser(string email, string hashedPassword)
+        public void SaveUser(string email, string encryptedPassword)
         {
             if (isoStore.FileExists("UserData.txt"))
             {
                 if (!ReadData("UserData").Contains(email))
                 {
-                    WriteData("UserData", new List<string> { email, hashedPassword }, FileMode.Append);
+                    WriteData("UserData", new List<string> { email, encryptedPassword }, FileMode.Append);
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace SaintSender.Core.Models
             }
             else
             {
-                WriteData("UserData", new List<string> { email, hashedPassword }, FileMode.CreateNew);
+                WriteData("UserData", new List<string> { email, encryptedPassword }, FileMode.CreateNew);
             }
         }
 
