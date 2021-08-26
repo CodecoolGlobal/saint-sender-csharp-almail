@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
+using SaintSender.Core.Interfaces;
 using SaintSender.Core.Models;
 using SaintSender.DesktopUI.Utility;
 
@@ -195,6 +197,7 @@ namespace SaintSender.DesktopUI.UserControls
                 allEmails[i].Body = DrawUtil.TextMaxHeight(allEmails[i].Body, 3, "[...]", 200);
             }
 
+            UpdateFiltering();
             UpdatePagination();
             Refresh();
         }
@@ -204,14 +207,7 @@ namespace SaintSender.DesktopUI.UserControls
         /// </summary>
         public void NavigatePageNext()
         {
-            scrollY = 0;
-
-            currentPage++;
-            if (currentPage > Pages - 1)
-                currentPage = Pages - 1;
-
-            UpdatePagination();
-            Refresh();
+            Navigate(1);
         }
 
         /// <summary>
@@ -219,44 +215,34 @@ namespace SaintSender.DesktopUI.UserControls
         /// </summary>
         public void NavigatePagePrevious()
         {
-            scrollY = 0;
-
-            currentPage--;
-            if (currentPage < 0)
-                currentPage = 0;
-
-            UpdatePagination();
-            Refresh();
+            Navigate(-1);
         }
         public bool CanNavigateNext => currentPage < Pages - 1;
         public bool CanNavigatePrevious => currentPage > 0;
-        public string PaginationText => string.Format("{0} / {1} ({2} emails)", currentPage + 1, Pages, allEmails.Length);
+        public string PaginationText => string.Format("{0} / {1} ({2} emails)", currentPage + 1, Pages, filteredEmails.Length);
+
+        public void FilterEmails(MailFilter filter)
+        {
+            emailFilter = filter;
+            UpdateFiltering();
+            UpdatePagination();
+            Refresh();
+        }
         #endregion
 
 
-        private void UpdatePagination()
-        {
-            int startIndex = MAIL_PER_PAGE * currentPage;
-            int endIndex = Math.Min(startIndex + MAIL_PER_PAGE, allEmails.Length);
-
-            emails = new EmailMessage[endIndex - startIndex];
-
-            int actualIndex = 0;
-            for (int index = startIndex; index < endIndex; index++)
-            {
-                emails[actualIndex] = allEmails[allEmails.Length - index - 1];
-                actualIndex++;
-            }
-        }
-
 
         #region Private & Protected
+        MailFilter emailFilter = MailFilter.Received;
+
         static int MAIL_PER_PAGE = 24;
 
         int currentPage = 0;
-        int Pages => (int)Math.Ceiling((float)allEmails.Length / (float)MAIL_PER_PAGE);
+        int Pages => (int)Math.Ceiling((float)filteredEmails.Length / (float)MAIL_PER_PAGE);
 
         EmailMessage[] allEmails = new EmailMessage[0];
+
+        EmailMessage[] filteredEmails = new EmailMessage[0];
 
         EmailMessage[] emails = new EmailMessage[0];
 
@@ -308,6 +294,53 @@ namespace SaintSender.DesktopUI.UserControls
                 return ListItemHoverForeground;
             return ListItemForeground;
         }
+
+        private void Navigate(int direction)
+        {
+            currentPage += direction;
+
+            UpdatePagination();
+            Refresh();
+        }
+
+        private void UpdateFiltering()
+        {
+            List<EmailMessage> emailList = new List<EmailMessage>();
+
+            foreach(EmailMessage message in allEmails)
+            {
+                if (emailFilter == MailFilter.All ||
+                    (emailFilter == MailFilter.Sent && message.IsSent) ||
+                    (emailFilter == MailFilter.Received && message.IsReceived))
+                    emailList.Add(message);
+            }
+
+            filteredEmails = emailList.ToArray();
+        }
+
+        private void UpdatePagination()
+        {
+            currentPage = Math.Max(0, Math.Min(Pages - 1, currentPage));
+
+            int startIndex = MAIL_PER_PAGE * currentPage;
+            int endIndex = Math.Min(startIndex + MAIL_PER_PAGE, filteredEmails.Length);
+
+            emails = new EmailMessage[endIndex - startIndex];
+
+            int actualIndex = 0;
+            for (int index = startIndex; index < endIndex; index++)
+            {
+                emails[actualIndex] = filteredEmails[filteredEmails.Length - index - 1];
+                actualIndex++;
+            }
+        }
         #endregion
+    }
+
+    public enum MailFilter
+    {
+        Received = 0,
+        Sent = 1,
+        All = 2
     }
 }

@@ -114,5 +114,23 @@ namespace SaintSender.DesktopUI
                 TextboxSearch.Text = null;
             TextboxSearch.Foreground = new SolidColorBrush(Colors.Black);
         }
+
+        private void ButtonReceived_Click(object sender, RoutedEventArgs e)
+        {
+            EmailDisplayList.FilterEmails(UserControls.MailFilter.Received);
+            UpdatePagination();
+        }
+
+        private void ButtonSent_Click(object sender, RoutedEventArgs e)
+        {
+            EmailDisplayList.FilterEmails(UserControls.MailFilter.Sent);
+            UpdatePagination();
+        }
+
+        private void ButtonAll_Click(object sender, RoutedEventArgs e)
+        {
+            EmailDisplayList.FilterEmails(UserControls.MailFilter.All);
+            UpdatePagination();
+        }
     }
 }
