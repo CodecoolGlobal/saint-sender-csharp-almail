@@ -38,9 +38,8 @@ namespace SaintSender.Core.Interfaces
 
             UserLoggedIn = true;
 
-            // Ezt írjuk át true-ra a secure storage ürítéséhez
-            // majd indítsuk el a programot. Üres lesz a lista.
-            // Pop-ot reseteljük, és a filterek helyre állnak.
+
+            // TODO: elmentjük secure storagebe is
 
             return LoadMails(false);
         }
