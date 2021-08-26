@@ -9,13 +9,25 @@ namespace SaintSender.Core.Models
     [Serializable]
     public class EmailMessage
     {
-        public EmailMessage(string sender, string receiver, string subject, string body, string html)
+        public EmailMessage(EmailMessage copy)
+        {
+            HTMLBody = copy.HTMLBody;
+            Sender = copy.Sender;
+            Receiver.AddRange(copy.Receiver);
+            Subject = copy.Subject;
+            Body = copy.Body;
+            SentTime = copy.SentTime;
+            IsRead = copy.IsRead;
+        }
+
+        public EmailMessage(string sender, string receiver, string subject, string body, string html, bool isReaded = false)
         {
             HTMLBody = html;
             Sender = sender;
             Receiver.Add(receiver);
             Subject = subject;
             Body = body;
+            IsRead = isReaded;
         }
 
 
@@ -44,19 +56,24 @@ namespace SaintSender.Core.Models
             HTMLBody = message.HtmlBody;
         }
 
+        public EmailMessage Clone()
+        {
+            return new EmailMessage(this);
+        }
+
         public System.DateTime SentTime { get; }
 
         public string Sender { get; }
 
         public List<string> Receiver { get; set; } = new List<string>();
 
-        public string Subject { get; }
+        public string Subject { get; set; }
 
         public bool IsRead { get; set; }
 
-        public string Body { get; }
+        public string Body { get; set; }
 
-        public string HTMLBody { get; set; }
+        public string HTMLBody { get; }
 
         public override string ToString()
         {

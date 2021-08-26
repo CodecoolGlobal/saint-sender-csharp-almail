@@ -12,15 +12,14 @@ namespace SaintSender.Core.Models
             storageAccess.SaveUser(email, EncryptedPassword);
         }
 
-        public bool ValidateLoginCredentials(string email, string hashedPassword)
+        public static bool ValidateLoginCredentials(string email, string encryptedPassword)
         {
             SecureStorageAccess storageAccess = new SecureStorageAccess();
             Dictionary<string,string> userData = storageAccess.GetUserLoginData(email);
-            return userData[email] == hashedPassword;
+            try { return userData[email] == encryptedPassword; } catch { return false; }  
         }
 
         public string Email { get; set; }
         public string EncryptedPassword { get; private set; }
-
     }
 }

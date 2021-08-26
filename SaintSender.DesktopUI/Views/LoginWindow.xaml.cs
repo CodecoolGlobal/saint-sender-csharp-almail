@@ -87,8 +87,6 @@ namespace SaintSender.DesktopUI.Views
                 Passwordbox.Password = null;
             Passwordbox.Foreground = new SolidColorBrush(Colors.Black);
         }
-
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var hwnd = new WindowInteropHelper(this).Handle;
@@ -109,7 +107,6 @@ namespace SaintSender.DesktopUI.Views
         private void UpdateLoginButton()
         { if (LoginButton != null)
                 LoginButton.Text = CredentialsNotFilled ? "Close" : "Login";
-        
         }
     }
 }
