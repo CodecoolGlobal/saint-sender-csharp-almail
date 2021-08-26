@@ -64,14 +64,19 @@ namespace SaintSender.DesktopUI
             if (ButtonPreviousPage != null)
             {
                 ButtonPreviousPage.IsEnabled = EmailDisplayList.CanNavigatePrevious;
+                ButtonPreviousPage.Visibility = EmailDisplayList.IsEmailOpened ? Visibility.Hidden : Visibility.Visible;
                 ButtonPreviousPage.Refresh();
             }
 
             if (ButtonNextPage != null)
             {
                 ButtonNextPage.IsEnabled = EmailDisplayList.CanNavigateNext;
+                ButtonNextPage.Visibility = EmailDisplayList.IsEmailOpened ? Visibility.Hidden : Visibility.Visible;
                 ButtonNextPage.Refresh();
             }
+
+            if (ButtonCloseOpened != null)
+                ButtonCloseOpened.Visibility = EmailDisplayList.IsEmailOpened ? Visibility.Visible : Visibility.Hidden;
 
             if (LabelPagination != null)
                 LabelPagination.Content = EmailDisplayList.PaginationText;
@@ -141,6 +146,11 @@ namespace SaintSender.DesktopUI
             EmailDisplayList.FilterEmails(UserControls.MailFilter.All);
             UpdatePagination();
         }
+        private void ButtonCloseOpened_OnClick(object sender, EventArgs e)
+        {
+            EmailDisplayList.CloseOpenedEmail();
+            UpdatePagination();
+        }
 
         private void TextboxSearch_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
@@ -151,6 +161,12 @@ namespace SaintSender.DesktopUI
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             EmailDisplayList.EmailReadStatusChanged += EmailDisplayList_EmailReadStatusChanged;
+            EmailDisplayList.EmailOpenedChanged += EmailDisplayList_EmailOpenedChanged;
+        }
+
+        private void EmailDisplayList_EmailOpenedChanged(object sender, EventArgs e)
+        {
+            UpdatePagination();
         }
 
         private void EmailDisplayList_EmailReadStatusChanged(object sender, UserControls.EmailReadStatusEventArgs e)

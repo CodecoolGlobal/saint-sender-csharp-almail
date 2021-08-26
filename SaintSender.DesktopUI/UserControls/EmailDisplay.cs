@@ -114,9 +114,9 @@ namespace SaintSender.DesktopUI.UserControls
             SolidColorBrush backColor = new SolidColorBrush(ItemBackground(-2));
             SolidColorBrush foreColor = new SolidColorBrush(ItemForeground(-2));
 
-            float cursorY = SidePadding;
+            float cursorY = -scrollY;
 
-            // From & To:
+            // From & To & Date:
             FormattedText fromLabelText = DrawUtil.FormatText("From:", foreColor, 14, true);
             FormattedText fromText = DrawUtil.FormatText(openedEmail.Sender + "\n" + openedEmail.SentTime.ToString("yyyy.MM.dd HH:mm"), foreColor, 13, false);
             Rect fromRect = new Rect(0, cursorY, (OutsideWidth - SidePadding) / 2, fromLabelText.Height + fromText.Height + SidePadding * 2);
@@ -141,10 +141,13 @@ namespace SaintSender.DesktopUI.UserControls
 
             cursorY += (float)toRect.Height + SidePadding;
 
+            // Body
             FormattedText bodyText = DrawUtil.FormatText(openedEmail.Body, foreColor, 12);
             Rect bodyRect = new Rect(0, cursorY, OutsideWidth, bodyText.Height + SidePadding * 2);
             drawingContext.DrawRectangle(backColor, null, bodyRect);
             drawingContext.DrawText(bodyText, new Point(bodyRect.X + SidePadding, bodyRect.Y + SidePadding));
+
+            openedViewHeight = cursorY + (float)bodyRect.Height + SidePadding + scrollY;
         }
 
         /// <summary>
@@ -197,7 +200,7 @@ namespace SaintSender.DesktopUI.UserControls
             if (!mouseInside)
                 return;
 
-            float viewScale = OutsideHeight / AllEmailsHeight;
+            float viewScale = OutsideHeight / ViewHeight;
 
             if (viewScale >= 1)
                 return;
@@ -217,7 +220,7 @@ namespace SaintSender.DesktopUI.UserControls
             scrollY = Math.Max(0, scrollY);
             scrollY = Math.Min(ScrollMax, scrollY);
 
-            if (AllEmailsHeight <= OutsideHeight)
+            if (ViewHeight <= OutsideHeight)
                 scrollY = 0;
         }
 
@@ -232,11 +235,15 @@ namespace SaintSender.DesktopUI.UserControls
 
             openedEmail = allEmails[emailIndex];
             openedEmail.IsRead = true;
+            scrollY = 0;
 
             if (EmailReadStatusChanged != null)
                 EmailReadStatusChanged.Invoke(this, new EmailReadStatusEventArgs(emailIndex, openedEmail.IsRead));
 
             UpdateFiltering();
+
+            if (EmailOpenedChanged != null)
+                EmailOpenedChanged.Invoke(this, new EventArgs());
         }
         #endregion
 
@@ -244,6 +251,9 @@ namespace SaintSender.DesktopUI.UserControls
 
         #region Public
         public event EventHandler<EmailReadStatusEventArgs> EmailReadStatusChanged = null;
+        public event EventHandler EmailOpenedChanged = null;
+
+        public bool IsEmailOpened => openedEmail != null;
 
         /// <summary>
         /// Updates visible email list
@@ -288,9 +298,18 @@ namespace SaintSender.DesktopUI.UserControls
         public void FilterEmails(MailFilter filter)
         {
             scrollY = 0;
+            openedEmail = null;
             emailFilter = filter;
             UpdateFiltering();
             Refresh();
+        }
+
+        /// <summary>
+        /// Closes the currently opened email detail view
+        /// </summary>
+        public void CloseOpenedEmail()
+        {
+            FilterEmails(emailFilter);
         }
 
         /// <summary>
@@ -300,6 +319,7 @@ namespace SaintSender.DesktopUI.UserControls
         public void SearchText(string text)
         {
             scrollY = 0;
+            openedEmail = null;
             searchString = text;
             UpdateFiltering();
             Refresh();
@@ -312,6 +332,7 @@ namespace SaintSender.DesktopUI.UserControls
         string searchString = "";
 
         EmailMessage openedEmail = null;
+        float openedViewHeight = 0;
 
         MailFilter emailFilter = MailFilter.Received;
 
@@ -352,6 +373,7 @@ namespace SaintSender.DesktopUI.UserControls
         private float ItemHeight => LineHeight + BorderThickness;
 
         private float AllEmailsHeight => emails.Length * ItemHeight;
+        private float ViewHeight => openedEmail == null ? AllEmailsHeight : openedViewHeight;
 
         private float ScrollMax
         {
@@ -360,7 +382,7 @@ namespace SaintSender.DesktopUI.UserControls
                 if (emails == null)
                     return 0;
 
-                return AllEmailsHeight - OutsideHeight;
+                return ViewHeight - OutsideHeight;
             }
         }
 
