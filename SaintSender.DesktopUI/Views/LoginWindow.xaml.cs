@@ -108,5 +108,11 @@ namespace SaintSender.DesktopUI.Views
         { if (LoginButton != null)
                 LoginButton.Text = CredentialsNotFilled ? "Close" : "Login";
         }
+
+        private void TextboxEmail_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+                PasswordboxWatermark_GotFocus(sender, e);
+        }
     }
 }
