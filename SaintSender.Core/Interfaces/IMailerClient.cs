@@ -67,5 +67,15 @@ namespace SaintSender.Core.Interfaces
         /// (Re)loads the email list
         /// </summary>
         public abstract bool LoadMails();
+
+        public bool IsMessageTypeSent(EmailMessage message)
+        {
+            return message.Sender == UserEmail;
+        }
+
+        public bool IsMessageTypeReceived(EmailMessage message)
+        {
+            return message.Receiver.Contains(UserEmail);
+        }
     }
 }

@@ -40,16 +40,6 @@
             } //TODO else notify the user that the internet connection has been cut.
         }
 
-        public bool IsMessageTypeSent(EmailMessage message)
-        {
-           return message.Sender == UserEmail;
-        }
-
-        public bool IsMessageTypeReceived(EmailMessage message)
-        {
-            return message.Receiver.Contains(UserEmail);
-        }
-
         public override bool LoadMails()
         {
             SecureStorageAccess storageAccess = new SecureStorageAccess();
@@ -89,6 +79,8 @@
                     for (int i = 0; i < pop3Client.Count; i++)
                     {
                         var message = new EmailMessage(pop3Client.GetMessage(i));
+                        message.IsSent = IsMessageTypeSent(message);
+                        message.IsReceived = IsMessageTypeReceived(message);
                         if (!Emails.Contains(message))
                             Emails.Add(message);
                     }
