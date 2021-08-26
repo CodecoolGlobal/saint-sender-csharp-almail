@@ -57,13 +57,15 @@ namespace SaintSender.Core.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
             try
             {
                 EmailMessage otherMessage = obj as EmailMessage;
-                if (otherMessage.Sender.Equals(Sender) ||
-                    System.Linq.Enumerable.SequenceEqual(otherMessage.Receiver, Receiver) ||
-                    otherMessage.Body.Equals(Body) ||
-                    otherMessage.Subject.Equals(Subject) ||
+                if (otherMessage != null && otherMessage.Sender.Equals(Sender) &&
+                    System.Linq.Enumerable.SequenceEqual(otherMessage.Receiver, Receiver) &&
+                    otherMessage.Body.Equals(Body) &&
+                    otherMessage.Subject.Equals(Subject) &&
                     otherMessage.SentTime.Ticks == SentTime.Ticks)
                 {
                     return true;

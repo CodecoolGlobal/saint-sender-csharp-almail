@@ -38,22 +38,31 @@ namespace SaintSender.Core.Models
                 MessageBox.Show("The user does not exist.");
             }
 
-            return null;
+            return new Dictionary<string, string>();
         }
 
         public List<string> ReadData(string fileName)
         {
-            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(fileName + ".txt", FileMode.Open, isoStore))
+            try
             {
-                using (StreamReader reader = new StreamReader(isoStream))
+                using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(fileName + ".txt", FileMode.Open, isoStore))
                 {
-                    List<string> stringList = new List<string>();
-                    while (!reader.EndOfStream) { 
-                        stringList.Add(reader.ReadLine());
+                    using (StreamReader reader = new StreamReader(isoStream))
+                    {
+                        List<string> stringList = new List<string>();
+                        while (!reader.EndOfStream)
+                        {
+                            stringList.Add(reader.ReadLine());
+                        }
+                        return stringList;
                     }
-                    return stringList;
                 }
             }
+            catch 
+            {
+                return new List<string>();
+            }
+            
         }
         #endregion
 
@@ -93,7 +102,12 @@ namespace SaintSender.Core.Models
         {
             string jsonString = string.Join("",ReadData(user));
             Debug.WriteLine(jsonString);
-            return JsonConvert.DeserializeObject<List<EmailMessage>>(jsonString);
+
+                var deserialized = JsonConvert.DeserializeObject<List<EmailMessage>>(jsonString);
+                
+                return deserialized == null ? new List<EmailMessage>() : deserialized;
+                
+
         }
 
         public void WriteData(string fileToWrite, List<string> data, FileMode writeMethod = FileMode.Create)

@@ -48,18 +48,20 @@
 
         public bool IsMessageTypeSent(EmailMessage message)
         {
-           return message.Sender == account.Email;
+           return message.Sender == UserEmail;
         }
 
         public bool IsMessageTypeReceived(EmailMessage message)
         {
-            return message.Receiver.Contains(account.Email);
+            return message.Receiver.Contains(UserEmail);
         }
 
         public override bool LoadMails()
         {
             Emails.Clear();
+            SecureStorageAccess storageAccess = new SecureStorageAccess();
 
+            Emails.AddRange(storageAccess.GetUserEmails(UserEmail));
             if (UserLoggedIn)
             {
                 using (Pop3Client pop3Client = new Pop3Client())
@@ -91,13 +93,11 @@
                         var message = pop3Client.GetMessage(i);
                         Emails.Add(new EmailMessage(message));
                     }
-
+                    
                     pop3Client.Disconnect(true);
-
+                    storageAccess.SaveUserEmails(UserEmail, Emails);
                     return true;
                 }
-
-                // TODO: save all emails into the account's json file
             }
             else
                 return true;

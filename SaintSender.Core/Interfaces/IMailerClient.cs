@@ -21,6 +21,8 @@ namespace SaintSender.Core.Interfaces
             UserEmail = userEmail;
             UserPassword = password;
 
+
+
             // TODO: elmentjük secure storagebe is
 
             UserLoggedIn = true;
