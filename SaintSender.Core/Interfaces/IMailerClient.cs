@@ -36,11 +36,11 @@ namespace SaintSender.Core.Interfaces
             UserEmail = userEmail;
             UserPassword = password;
 
-
-
-            // TODO: elmentjük secure storagebe is
-
             UserLoggedIn = true;
+
+            // Ezt írjuk át true-ra a secure storage ürítéséhez
+            // majd indítsuk el a programot. Üres lesz a lista.
+            // Pop-ot reseteljük, és a filterek helyre állnak.
 
             return LoadMails(false);
         }
