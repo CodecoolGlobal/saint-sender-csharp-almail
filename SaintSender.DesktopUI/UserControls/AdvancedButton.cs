@@ -135,6 +135,9 @@ namespace SaintSender.DesktopUI.UserControls
         #region Rendering
         protected override void Render(DrawingContext drawingContext)
         {
+            if (!IsEnabled)
+                drawingContext.PushOpacity(0.3);
+
             drawingContext.DrawRectangle(new SolidColorBrush(BackgroundColor), null, OutsideRect);
 
             FormattedText labelText = DrawUtil.FormatText(Text, new SolidColorBrush(ForegroundColor), FontSize, false, FontFamily);
@@ -148,13 +151,8 @@ namespace SaintSender.DesktopUI.UserControls
 
             drawingContext.DrawText(labelText, new Point(labelX, OutsideHeight / 2 - (float)labelText.Height / 2));
 
-            float iconWidth = 20;
-
-            try
-            {
-                drawingContext.DrawIcon(Icon, ForegroundColor, new Rect(IconAlign == 1 ? InsideLeft : InsideRight - iconWidth, InsideTop, iconWidth, InsideHeight), out _, DrawUtil.IconStyle.Solid, FontSize);
-            }
-            catch { }
+            if (!IsEnabled)
+                drawingContext.Pop();
         }
         #endregion
 
@@ -173,6 +171,8 @@ namespace SaintSender.DesktopUI.UserControls
 
 
         #region Private & Protected
+        protected override bool RestrictedRendering => false;
+
         private Color BackgroundColor
         {
             get

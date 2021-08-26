@@ -161,7 +161,7 @@ namespace SaintSender.DesktopUI.UserControls
             }
         }
 
-        protected void Refresh()
+        public void Refresh()
         {
             if (!HasFramerate)
                 InvalidateVisual();
