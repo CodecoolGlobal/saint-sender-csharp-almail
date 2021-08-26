@@ -186,22 +186,78 @@ namespace SaintSender.DesktopUI.UserControls
         /// <param name="emailList">The array of the EmailMessages</param>
         public void UpdateEmailList(EmailMessage[] emailList)
         {
-            emails = new EmailMessage[emailList.Length];
+            allEmails = new EmailMessage[emailList.Length];
 
             for (int i=0; i < emailList.Length; i++)
             {
-                emails[i] = emailList[i].Clone();
-                emails[i].Subject = DrawUtil.TextMaxWidth(emails[i].Subject, 20);
-                emails[i].Body = DrawUtil.TextMaxHeight(emails[i].Body, 3, "[...]", 200);
+                allEmails[i] = emailList[i].Clone();
+                allEmails[i].Subject = DrawUtil.TextMaxWidth(allEmails[i].Subject, 20);
+                allEmails[i].Body = DrawUtil.TextMaxHeight(allEmails[i].Body, 3, "[...]", 200);
             }
 
+            UpdatePagination();
             Refresh();
         }
+
+        /// <summary>
+        /// Navigates to the next page
+        /// </summary>
+        public void NavigatePageNext()
+        {
+            scrollY = 0;
+
+            currentPage++;
+            if (currentPage > Pages - 1)
+                currentPage = Pages - 1;
+
+            UpdatePagination();
+            Refresh();
+        }
+
+        /// <summary>
+        /// Navigates to the previous page
+        /// </summary>
+        public void NavigatePagePrevious()
+        {
+            scrollY = 0;
+
+            currentPage--;
+            if (currentPage < 0)
+                currentPage = 0;
+
+            UpdatePagination();
+            Refresh();
+        }
+        public bool CanNavigateNext => currentPage < Pages - 1;
+        public bool CanNavigatePrevious => currentPage > 0;
+        public string PaginationText => string.Format("{0} / {1} ({2} emails)", currentPage + 1, Pages, allEmails.Length);
         #endregion
 
 
+        private void UpdatePagination()
+        {
+            int startIndex = MAIL_PER_PAGE * currentPage;
+            int endIndex = Math.Min(startIndex + MAIL_PER_PAGE, allEmails.Length);
+
+            emails = new EmailMessage[endIndex - startIndex];
+
+            int actualIndex = 0;
+            for (int index = startIndex; index < endIndex; index++)
+            {
+                emails[actualIndex] = allEmails[allEmails.Length - index - 1];
+                actualIndex++;
+            }
+        }
+
 
         #region Private & Protected
+        static int MAIL_PER_PAGE = 24;
+
+        int currentPage = 0;
+        int Pages => (int)Math.Ceiling((float)allEmails.Length / (float)MAIL_PER_PAGE);
+
+        EmailMessage[] allEmails = new EmailMessage[0];
+
         EmailMessage[] emails = new EmailMessage[0];
 
 
