@@ -67,20 +67,7 @@
                     }
                     catch (AuthenticationException)
                     {
-                        Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-                        Match match = regex.Match(UserEmail);
-                        if (match.Success)
-                        {
-                            MessageBox.Show("Invalid user credentials.");
-                            LogOutCurrentUser();
-                            return false;
-                        }
-                        else
-                        {
-                            MessageBox.Show("Incorrect email format.");
-                            LogOutCurrentUser();
-                            return false;
-                        }
+                        return ValidateEmailAddressNPasswordFormat();
                     }
                     catch
                     {
@@ -112,6 +99,24 @@
             }
 
             return false;
+        }
+
+        private bool ValidateEmailAddressNPasswordFormat()
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(UserEmail);
+            if (match.Success)
+            {
+                MessageBox.Show("Invalid user credentials.");
+                LogOutCurrentUser();
+                return false;
+            }
+            else
+            {
+                MessageBox.Show("Incorrect email format.");
+                LogOutCurrentUser();
+                return false;
+            }
         }
     }
 }
