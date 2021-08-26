@@ -65,6 +65,7 @@
                         try
                         {
                         pop3Client.Authenticate(UserEmail, UserPassword);
+
                         }
                         catch (AuthenticationException)
                         {

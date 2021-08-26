@@ -1,5 +1,7 @@
 ﻿using SaintSender.DesktopUI.ViewModels;
 using SaintSender.DesktopUI.Views;
+using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -32,6 +34,11 @@ namespace SaintSender.DesktopUI
             bool? loginResult = loginWindow.ShowDialog();
             if (loginResult.HasValue || loginResult.Value)
             {
+                if (loginWindow.isClosed)
+                {
+                    System.Windows.Application.Current.Shutdown();
+                    return;
+                }
                 if (_vm.LogIn(loginWindow.emailAddress, loginWindow.password))
                 {
                     EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
@@ -39,6 +46,10 @@ namespace SaintSender.DesktopUI
                 }
                 else
                     Login();
+            } 
+            else
+            {
+                System.Windows.Application.Current.Shutdown();
             }
             // TODO: quit application if X clicked in login form
             /*else
