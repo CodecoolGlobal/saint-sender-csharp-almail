@@ -46,5 +46,11 @@ namespace SaintSender.DesktopUI.ViewModels
         {
             return _mailService.Emails.ToArray();
         }
+
+        public void SendMail(string receiver, string subject, string body)
+        {
+            EmailMessage emailMessage = new EmailMessage(_mailService.UserEmail, receiver, subject, body, body);
+            _mailService.SendMail(emailMessage);
+        }
     }
 }

@@ -10,8 +10,8 @@ namespace SaintSender.Core.Interfaces
         public List<EmailMessage> Emails { get; protected set; } = new List<EmailMessage>();
 
         protected bool UserLoggedIn { get; private set; }
-        protected string UserEmail { get; private set; }
-        protected string UserPassword { get; private set; }
+        public string UserEmail { get; private set; }
+        public string UserPassword { get; private set; }
         public bool IsConnectedToInternet()
         {
             string host = "www.youtube.com";

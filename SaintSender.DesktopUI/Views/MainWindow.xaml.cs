@@ -72,12 +72,9 @@ namespace SaintSender.DesktopUI
         {
             WriteWindow writeWindow = new WriteWindow();
             bool? result = writeWindow.ShowDialog();
+
             if (result.HasValue && result.Value)
-            {
-                // Receiver: writeWindow.Receiver
-                // Subject: writeWindow.Subject
-                // Body: writeWindow.Body
-            }
+                _vm.SendMail(writeWindow.Receiver, writeWindow.Subject, writeWindow.Body);
         }
     }
 }
