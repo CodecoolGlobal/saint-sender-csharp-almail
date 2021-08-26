@@ -35,6 +35,7 @@ namespace SaintSender.DesktopUI
 
             LoginWindow loginWindow = new LoginWindow();
             bool? loginResult = loginWindow.ShowDialog();
+
             if (loginResult.HasValue || loginResult.Value)
             {
                 if (loginWindow.isClosed)
@@ -42,17 +43,16 @@ namespace SaintSender.DesktopUI
                     System.Windows.Application.Current.Shutdown();
                     return;
                 }
+
                 if (_vm.LogIn(loginWindow.emailAddress, loginWindow.password))
-                {
                     EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
-                }
+
                 else
                     Login();
             } 
             else
-            {
                 System.Windows.Application.Current.Shutdown();
-            }
+
             Visibility = Visibility.Visible;
         }
 
