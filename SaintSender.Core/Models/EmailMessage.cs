@@ -1,10 +1,12 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using MimeKit;
-using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace SaintSender.Core.Models
 {
+    [Serializable]
     public class EmailMessage
 
     {
@@ -16,6 +18,16 @@ namespace SaintSender.Core.Models
             Body = body;
         }
 
+
+        [JsonConstructor]
+        public EmailMessage(string sentTime ,string sender, string[] receiver, string subject, string body)
+        {
+            SentTime = DateTime.Parse(sentTime);
+            Sender = sender;
+            Receiver.AddRange(receiver);
+            Subject = subject;
+            Body = body;
+        }
         public EmailMessage(MimeMessage message)
         {
             //Debug.WriteLine(message);
@@ -39,6 +51,33 @@ namespace SaintSender.Core.Models
 
         public string Subject { get; }
         public string Body { get; }
+
+        public override string ToString()
+        {
+            return "Sender: " + Sender + "\nReceiver: " + Receiver + "\nSubject: " + Subject + "\nBody: " + Body + "\nSentTime: " + SentTime;
+        }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                EmailMessage otherMessage = obj as EmailMessage;
+                if (otherMessage.Sender.Equals(Sender) ||
+                    System.Linq.Enumerable.SequenceEqual(otherMessage.Receiver, Receiver) ||
+                    otherMessage.Body.Equals(Body) ||
+                    otherMessage.Subject.Equals(Subject) ||
+                    otherMessage.SentTime.Ticks == SentTime.Ticks)
+                {
+                    return true;
+                }
+                else
+                    return false;
+
+            }
+            catch { 
+                return false;
+            }
+        }
     }
 
 
@@ -54,4 +93,6 @@ namespace SaintSender.Core.Models
             return returnList;
         }
     }
+
+     
 }

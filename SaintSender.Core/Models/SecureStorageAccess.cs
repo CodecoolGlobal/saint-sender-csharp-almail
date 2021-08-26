@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Diagnostics;
 
 namespace SaintSender.Core.Models
 {
@@ -69,6 +71,19 @@ namespace SaintSender.Core.Models
             {
                 WriteData("UserData", new List<string> { email, encryptedPassword }, FileMode.CreateNew);
             }
+        }
+
+        public void SaveUserEmails(string user, List<EmailMessage> emails)
+        {
+            string jsonString = JsonConvert.SerializeObject(emails, Formatting.None);
+            WriteData(user, jsonString);
+        }
+
+        public List<EmailMessage> GetUserEmails(string user)
+        {
+            string jsonString = string.Join("",ReadData(user));
+            Debug.WriteLine(jsonString);
+            return JsonConvert.DeserializeObject<List<EmailMessage>>(jsonString);
         }
 
         public void WriteData(string fileToWrite, List<string> data, FileMode writeMethod = FileMode.Create)
