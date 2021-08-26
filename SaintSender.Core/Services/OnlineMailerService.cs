@@ -83,8 +83,9 @@
 
                     for (int i = 0 ; i < pop3Client.Count; i++)
                     {
-                        var message = pop3Client.GetMessage(i);
-                        Emails.Add(new EmailMessage(message));
+                        var message = new EmailMessage(pop3Client.GetMessage(i));
+                        if (!Emails.Contains(message))
+                            Emails.Add(message);
                     }
                     
                     pop3Client.Disconnect(true);
