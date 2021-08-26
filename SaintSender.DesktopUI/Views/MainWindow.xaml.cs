@@ -31,7 +31,6 @@ namespace SaintSender.DesktopUI
 
         private void Login()
         {
-            //EmailDisplayList.Visibility = Visibility.Hidden;
             Visibility = Visibility.Hidden;
 
             LoginWindow loginWindow = new LoginWindow();
@@ -55,9 +54,6 @@ namespace SaintSender.DesktopUI
                 System.Windows.Application.Current.Shutdown();
             }
             Visibility = Visibility.Visible;
-            // TODO: quit application if X clicked in login form
-            /*else
-                Application.Exit();*/
         }
 
         private void UpdatePagination()

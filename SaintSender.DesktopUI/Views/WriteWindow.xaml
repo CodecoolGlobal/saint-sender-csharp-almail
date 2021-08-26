@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SaintSender.DesktopUI.Views"
         xmlns:UserControls="clr-namespace:SaintSender.DesktopUI.UserControls" x:Class="SaintSender.DesktopUI.Views.WriteWindow"
         mc:Ignorable="d"
-        Title="WriteWindow" Height="450" Width="800" MinWidth="600" MinHeight="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Background="#FFCDCDCD">
+        Title="Write new email" Height="450" Width="800" MinWidth="600" MinHeight="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Background="#FFCDCDCD">
     <Grid>
         <Grid x:Name="GridMain" Margin="0">
             <Label x:Name="LabelTo" Content="To:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
