@@ -40,7 +40,7 @@
             } //TODO else notify the user that the internet connection has been cut.
         }
 
-        public override bool LoadMails()
+        public override bool LoadMails(bool clearStorage = false)
         {
             SecureStorageAccess storageAccess = new SecureStorageAccess();
 
@@ -53,7 +53,8 @@
             {
                 Debug.WriteLine("Getting emails from online source");
 
-                Emails.AddRange(storageAccess.GetUserEmails(UserEmail));
+                if (!clearStorage)
+                    Emails.AddRange(storageAccess.GetUserEmails(UserEmail));
 
                 using (Pop3Client pop3Client = new Pop3Client())
                 {
