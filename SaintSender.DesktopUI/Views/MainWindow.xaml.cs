@@ -1,4 +1,5 @@
-﻿using SaintSender.DesktopUI.ViewModels;
+﻿using SaintSender.Core.Models;
+using SaintSender.DesktopUI.ViewModels;
 using SaintSender.DesktopUI.Views;
 using System;
 using System.Runtime.InteropServices;
@@ -19,7 +20,7 @@ namespace SaintSender.DesktopUI
         {
             // set DataContext to the ViewModel object
             _vm = new MainWindowViewModel();
-           
+
             DataContext = _vm;
             InitializeComponent();
 

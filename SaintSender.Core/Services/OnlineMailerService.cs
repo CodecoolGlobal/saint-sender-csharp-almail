@@ -22,7 +22,7 @@
                     emailMessage.To.Add(new MailboxAddress(address, address));
 
                 emailMessage.Subject = email.Subject;
-                emailMessage.Body = new TextPart("html") { Text = email.HTMLBody };
+                emailMessage.Body = new TextPart("plain") { Text = email.Body };
 
                 try
                 {

@@ -16,6 +16,8 @@ namespace SaintSender.Core.Models
             Receiver.AddRange(copy.Receiver);
             Subject = copy.Subject;
             Body = copy.Body;
+            if (Body == null)
+                Body = "";
             SentTime = copy.SentTime;
             IsRead = copy.IsRead;
         }
@@ -27,6 +29,8 @@ namespace SaintSender.Core.Models
             Receiver.Add(receiver);
             Subject = subject;
             Body = body;
+            if (Body == null)
+                Body = "";
             IsRead = isReaded;
         }
 
@@ -39,6 +43,8 @@ namespace SaintSender.Core.Models
             Receiver.AddRange(receiver);
             Subject = subject;
             Body = body;
+            if (Body == null)
+                Body = "";
             HTMLBody = html;
             IsRead = isRead;
         }
@@ -53,6 +59,9 @@ namespace SaintSender.Core.Models
             SentTime = message.Date.DateTime;
             Subject = message.Subject;
             Body = message.GetTextBody(MimeKit.Text.TextFormat.Text);
+            if (Body == null)
+                Body = "";
+
             HTMLBody = message.HtmlBody;
         }
 
@@ -84,22 +93,32 @@ namespace SaintSender.Core.Models
         {
             if (obj == null)
                 return false;
+
             try
             {
                 EmailMessage otherMessage = obj as EmailMessage;
-                if (otherMessage != null && otherMessage.Sender.Equals(Sender) &&
-                    System.Linq.Enumerable.SequenceEqual(otherMessage.Receiver, Receiver) &&
-                    otherMessage.Body.Equals(Body) &&
-                    otherMessage.Subject.Equals(Subject) &&
-                    otherMessage.SentTime.Ticks == SentTime.Ticks)
-                {
-                    return true;
-                }
-                else
+
+                if (otherMessage == null)
                     return false;
 
+                if (!otherMessage.Sender.Equals(Sender))
+                    return false;
+                if (!System.Linq.Enumerable.SequenceEqual(otherMessage.Receiver, Receiver))
+                    return false;
+
+                if (otherMessage.Body == null || Body == null || !Body.Equals(otherMessage.Body))
+                    return false;
+
+                if (!otherMessage.Subject.Equals(Subject))
+                    return false;
+
+                if (otherMessage.SentTime.Ticks != SentTime.Ticks)
+                    return false;
+
+                return true;
             }
-            catch { 
+            catch
+            { 
                 return false;
             }
         }
