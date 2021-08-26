@@ -71,5 +71,10 @@ namespace SaintSender.DesktopUI.Views
                 Passwordbox.Password = null;
             Passwordbox.Foreground = new SolidColorBrush(Colors.Black);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            
+        }
     }
 }

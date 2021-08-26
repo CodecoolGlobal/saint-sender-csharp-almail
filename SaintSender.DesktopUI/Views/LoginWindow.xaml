@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SaintSender.DesktopUI.Views"
         xmlns:usercontrols="clr-namespace:SaintSender.DesktopUI.UserControls"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="300" Width="500" ResizeMode="NoResize" Background="Black" WindowStartupLocation="CenterScreen">
+        Title="LoginWindow" Height="300" Width="500" ResizeMode="NoResize" Background="Black" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid x:Name="GridBackground">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
