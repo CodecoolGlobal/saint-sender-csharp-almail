@@ -223,6 +223,7 @@ namespace SaintSender.DesktopUI.UserControls
 
         public void FilterEmails(MailFilter filter)
         {
+            scrollY = 0;
             emailFilter = filter;
             UpdateFiltering();
             UpdatePagination();
@@ -297,6 +298,8 @@ namespace SaintSender.DesktopUI.UserControls
 
         private void Navigate(int direction)
         {
+            scrollY = 0;
+
             currentPage += direction;
 
             UpdatePagination();
