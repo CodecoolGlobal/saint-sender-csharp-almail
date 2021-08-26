@@ -226,10 +226,13 @@ namespace SaintSender.DesktopUI.UserControls
 
         protected override void ClickEvent()
         {
+            int emailIndex;
             if (HoverIndex == -1)
                 return;
-
-            int emailIndex = GetEmailIndex(emails[HoverIndex]);
+            try { 
+            emailIndex = GetEmailIndex(emails[HoverIndex]);
+                }
+            catch { return; }
             if (emailIndex == -1)
                 return;
 
