@@ -26,6 +26,9 @@ namespace SaintSender.Core.Interfaces
         {
             UserEmail = UserPassword = null;
             UserLoggedIn = false;
+            Emails.Clear();
+
+            LoadMails();
         }
         public abstract void SendMail(Models.EmailMessage email);
         public abstract void LoadMails();
