@@ -1,5 +1,7 @@
 ﻿using SaintSender.Core.Models;
+using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 namespace SaintSender.Core.Interfaces
 {
@@ -10,6 +12,19 @@ namespace SaintSender.Core.Interfaces
         protected bool UserLoggedIn { get; private set; }
         protected string UserEmail { get; private set; }
         protected string UserPassword { get; private set; }
+        public bool IsConnectedToInternet()
+        {
+            string host = "www.youtube.com";
+            Ping p = new Ping();
+            try
+            {
+                PingReply reply = p.Send(host, 3000);
+                if (reply.Status == IPStatus.Success)
+                    return true;
+            }
+            catch { }
+            return false;
+        }
 
         /// <summary>
         /// Logs in an user with login credentials and refreshes the email list
