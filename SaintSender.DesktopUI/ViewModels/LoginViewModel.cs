@@ -8,9 +8,6 @@ namespace SaintSender.DesktopUI.ViewModels
 {
     class LoginViewModel : ViewModelBase
     {
-
-
-
-
+        
     }
 }

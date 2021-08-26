@@ -32,10 +32,17 @@ namespace SaintSender.DesktopUI
             bool? loginResult = loginWindow.ShowDialog();
             if (loginResult.HasValue || loginResult.Value)
             {
-                _vm.LogIn(loginWindow.emailAddress, loginWindow.password);
-                EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
-                EmailDisplayList.Visibility = Visibility.Visible;
+                if (_vm.LogIn(loginWindow.emailAddress, loginWindow.password))
+                {
+                    EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
+                    EmailDisplayList.Visibility = Visibility.Visible;
+                }
+                else
+                    Login();
             }
+            // TODO: quit application if X clicked in login form
+            /*else
+                Application.Exit();*/
         }
 
         private void ButtonReload_Click(object sender, RoutedEventArgs e)

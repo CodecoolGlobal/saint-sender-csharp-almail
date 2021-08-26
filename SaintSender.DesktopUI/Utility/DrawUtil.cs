@@ -36,8 +36,7 @@ namespace SaintSender.DesktopUI.Utility
         }
         public static FormattedText FormatText(string text, Brush color, FontFamily fontFamily, int fontSize = 12, bool bold = false)
         {
-            return new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                                new Typeface(fontFamily,
+            return new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(fontFamily,
                                         FontStyles.Normal,
                                         bold ? FontWeights.Bold : FontWeights.Normal,
                                         FontStretches.Normal),

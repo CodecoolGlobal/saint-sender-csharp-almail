@@ -135,7 +135,6 @@ namespace SaintSender.DesktopUI.UserControls
             if (titleText.Width > ShrinkWidth * TitleWidth)
                 drawingContext.DrawGradient(new Rect(InsideLeft + ShrinkWidth * (DateWidth + TitleWidth), yPosition, SidePadding * 2, LineHeight), new Color[] { DrawUtil.ColorAlpha(backColor, 0), DrawUtil.ColorAlpha(backColor, 1), DrawUtil.ColorAlpha(backColor, 0) });
 
-            //drawingContext.ClipRectangle()
             FormattedText bodyText = DrawUtil.FormatText(email.Body, new SolidColorBrush(foreColor), 12);
             drawingContext.DrawText(bodyText, new Point(InsideLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : yPosition + 8));
 
@@ -179,6 +178,10 @@ namespace SaintSender.DesktopUI.UserControls
 
 
         #region Public
+        /// <summary>
+        /// Updates visible email list
+        /// </summary>
+        /// <param name="emailList">The array of the EmailMessages</param>
         public void UpdateEmailList(EmailMessage[] emailList)
         {
             emails = emailList;

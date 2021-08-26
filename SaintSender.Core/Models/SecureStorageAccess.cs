@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace SaintSender.Core.Models
 {
@@ -12,7 +13,11 @@ namespace SaintSender.Core.Models
         IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
         #region Reading data
-        //Read from secure storage
+        /// <summary>
+        /// Read user data from secure storage
+        /// </summary>
+        /// <param name="email">User email</param>
+        /// <returns>User data as Dictionary</returns>
         public Dictionary<string,string> GetUserLoginData(string email)
         {
             if (isoStore.FileExists("UserData.txt"))
@@ -23,16 +28,17 @@ namespace SaintSender.Core.Models
                     int index = userDataList.IndexOf(email);
                     return new Dictionary<string, string>() { { email, userDataList[index+1] } };
                 }
-                catch (Exception)
+                catch
                 {
-
-                    throw new Exception("The user does not exist.");
+                    MessageBox.Show("The user does not exist.");
                 }
                 
             } else
             {
-                throw new Exception("The user does not exist.");
+                MessageBox.Show("The user does not exist.");
             }
+
+            return null;
         }
 
         public List<string> ReadData(string fileName)
@@ -52,7 +58,11 @@ namespace SaintSender.Core.Models
         #endregion
 
         #region Writing data
-        //Write to secure storage
+        /// <summary>
+        /// Write user data to secure storage
+        /// </summary>
+        /// <param name="email">User email</param>
+        /// <param name="hashedPassword">User password as hash</param>
 
         public void SaveUser(string email, string encryptedPassword)
         {
