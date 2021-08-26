@@ -1,0 +1,29 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SaintSender.DesktopUI.Views"
+        xmlns:UserControls="clr-namespace:SaintSender.DesktopUI.UserControls" x:Class="SaintSender.DesktopUI.Views.WriteWindow"
+        mc:Ignorable="d"
+        Title="WriteWindow" Height="450" Width="800" MinWidth="600" MinHeight="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Grid>
+        <Grid x:Name="GridMain" Margin="0">
+            <Label x:Name="LabelTo" Content="To:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxTo" Height="23" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="774"/>
+            <Label x:Name="LabelSubject" Content="Subject:" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxSubject" Height="23" Margin="10,102,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="774"/>
+            <Label x:Name="LabelMessage" Content="Message:" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
+            <UserControls:AdvancedButton x:Name="ButtonSend" Height="22" Margin="684,390,10,10" VerticalAlignment="Bottom" Width="100" HorizontalAlignment="Right" Text="Send" Background="Black" Foreground="White" HoverBackground="#FF3A3A3A" PressedBackground="White" PressedForeground="Black" OnClick="ButtonSend_OnClick"/>
+            <UserControls:AdvancedButton x:Name="ButtonCancel" Height="22" Margin="0,0,115,10" VerticalAlignment="Bottom" Width="100" HorizontalAlignment="Right" Text="Cancel" Background="#FF646464" Foreground="White" HoverBackground="#FF3A3A3A" PressedBackground="White" PressedForeground="Black" OnClick="ButtonCancel_OnClick"/>
+            <RichTextBox x:Name="TextareaMessage" Margin="10,176,10,37" Width="774">
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="RichTextBox"/>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+        </Grid>
+
+    </Grid>
+</Window>
