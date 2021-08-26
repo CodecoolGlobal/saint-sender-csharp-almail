@@ -61,11 +61,20 @@ namespace SaintSender.DesktopUI
 
         private void UpdatePagination()
         {
-            ButtonPreviousPage.IsEnabled = EmailDisplayList.CanNavigatePrevious;
-            ButtonNextPage.IsEnabled = EmailDisplayList.CanNavigateNext;
-            LabelPagination.Content = EmailDisplayList.PaginationText;
-            ButtonPreviousPage.Refresh();
-            ButtonNextPage.Refresh();
+            if (ButtonPreviousPage != null)
+            {
+                ButtonPreviousPage.IsEnabled = EmailDisplayList.CanNavigatePrevious;
+                ButtonPreviousPage.Refresh();
+            }
+
+            if (ButtonNextPage != null)
+            {
+                ButtonNextPage.IsEnabled = EmailDisplayList.CanNavigateNext;
+                ButtonNextPage.Refresh();
+            }
+
+            if (LabelPagination != null)
+                LabelPagination.Content = EmailDisplayList.PaginationText;
         }
 
         private void ButtonReload_Click(object sender, RoutedEventArgs e)
@@ -130,6 +139,12 @@ namespace SaintSender.DesktopUI
         private void ButtonAll_Click(object sender, RoutedEventArgs e)
         {
             EmailDisplayList.FilterEmails(UserControls.MailFilter.All);
+            UpdatePagination();
+        }
+
+        private void TextboxSearch_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            EmailDisplayList.SearchText(TextboxSearch.Text == "Search..." ? "" : TextboxSearch.Text);
             UpdatePagination();
         }
     }

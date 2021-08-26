@@ -198,7 +198,6 @@ namespace SaintSender.DesktopUI.UserControls
             }
 
             UpdateFiltering();
-            UpdatePagination();
             Refresh();
         }
 
@@ -219,7 +218,7 @@ namespace SaintSender.DesktopUI.UserControls
         }
         public bool CanNavigateNext => currentPage < Pages - 1;
         public bool CanNavigatePrevious => currentPage > 0;
-        public string PaginationText => string.Format("{0} / {1} ({2} emails)", currentPage + 1, Pages, filteredEmails.Length);
+        public string PaginationText => string.Format("{0} / {1} ({2} emails)", currentPage + 1, Pages, searchedEmails.Length);
 
         /// <summary>
         /// Filter the email list by the sender and receiver (Sent, Received, All)
@@ -230,7 +229,18 @@ namespace SaintSender.DesktopUI.UserControls
             scrollY = 0;
             emailFilter = filter;
             UpdateFiltering();
-            UpdatePagination();
+            Refresh();
+        }
+
+        /// <summary>
+        /// Searches for a text in the message Sender, Subject, and Body fields
+        /// </summary>
+        /// <param name="text">The search phrase</param>
+        public void SearchText(string text)
+        {
+            scrollY = 0;
+            searchString = text;
+            UpdateFiltering();
             Refresh();
         }
         #endregion
@@ -238,16 +248,20 @@ namespace SaintSender.DesktopUI.UserControls
 
 
         #region Private & Protected
+        string searchString = "";
+
         MailFilter emailFilter = MailFilter.Received;
 
         static int MAIL_PER_PAGE = 24;
 
         int currentPage = 0;
-        int Pages => (int)Math.Ceiling((float)filteredEmails.Length / (float)MAIL_PER_PAGE);
+        int Pages => (int)Math.Ceiling((float)searchedEmails.Length / (float)MAIL_PER_PAGE);
 
         EmailMessage[] allEmails = new EmailMessage[0];
 
         EmailMessage[] filteredEmails = new EmailMessage[0];
+
+        EmailMessage[] searchedEmails = new EmailMessage[0];
 
         EmailMessage[] emails = new EmailMessage[0];
 
@@ -306,7 +320,7 @@ namespace SaintSender.DesktopUI.UserControls
 
             currentPage += direction;
 
-            UpdatePagination();
+            UpdateFiltering();
             Refresh();
         }
 
@@ -323,6 +337,27 @@ namespace SaintSender.DesktopUI.UserControls
             }
 
             filteredEmails = emailList.ToArray();
+
+            UpdateSearch();
+        }
+
+        private void UpdateSearch()
+        {
+            List<EmailMessage> emailList = new List<EmailMessage>();
+
+            foreach (EmailMessage message in filteredEmails)
+            {
+                if (searchString.Equals("") ||
+                    message.Sender.ToLower().Contains(searchString.ToLower()) ||
+                    message.Subject.ToLower().Contains(searchString.ToLower()) ||
+                    (message.Body != null && message.Body.ToLower().Contains(searchString.ToLower())) ||
+                    (message.HTMLBody != null && message.HTMLBody.ToLower().Contains(searchString.ToLower())))
+                    emailList.Add(message);
+            }
+
+            searchedEmails = emailList.ToArray();
+
+            UpdatePagination();
         }
 
         private void UpdatePagination()
@@ -330,14 +365,14 @@ namespace SaintSender.DesktopUI.UserControls
             currentPage = Math.Max(0, Math.Min(Pages - 1, currentPage));
 
             int startIndex = MAIL_PER_PAGE * currentPage;
-            int endIndex = Math.Min(startIndex + MAIL_PER_PAGE, filteredEmails.Length);
+            int endIndex = Math.Min(startIndex + MAIL_PER_PAGE, searchedEmails.Length);
 
             emails = new EmailMessage[endIndex - startIndex];
 
             int actualIndex = 0;
             for (int index = startIndex; index < endIndex; index++)
             {
-                emails[actualIndex] = filteredEmails[filteredEmails.Length - index - 1];
+                emails[actualIndex] = searchedEmails[searchedEmails.Length - index - 1];
                 actualIndex++;
             }
         }
