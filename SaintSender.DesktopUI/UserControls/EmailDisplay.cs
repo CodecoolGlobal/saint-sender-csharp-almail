@@ -355,7 +355,7 @@ namespace SaintSender.DesktopUI.UserControls
 
         protected override bool Scrollable => true;
 
-        protected override bool HasFramerate => true;
+        protected override bool HasFramerate => false;
 
         protected override bool DebugDraw => false;
 
