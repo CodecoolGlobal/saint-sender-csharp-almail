@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SaintSender.DesktopUI.Views
 {
@@ -28,7 +20,7 @@ namespace SaintSender.DesktopUI.Views
         private const int GWL_STYLE = -16;
         private const int WS_SYSMENU = 0x80000;
 
-        private bool CredentialsNotFilled => TextboxEmail == null || Passwordbox == null ? true : TextboxEmail.Text.Equals("Email address") && Passwordbox.Password.Equals("Password");
+        private bool CredentialsNotFilled => TextboxEmail == null || Passwordbox == null || !(!TextboxEmail.Text.Equals("Email address") || !Passwordbox.Password.Equals("Password"));
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
@@ -37,6 +29,13 @@ namespace SaintSender.DesktopUI.Views
         public LoginWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var hwnd = new WindowInteropHelper(this).Handle;
+            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
+            UpdateLoginButton();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -48,6 +47,7 @@ namespace SaintSender.DesktopUI.Views
             DialogResult = true;
         }
 
+        #region TextboxEmail watermark
         private void TextboxEmail_GotFocus(object sender, RoutedEventArgs e)
         {
             if (TextboxEmail.Text == "Email address")
@@ -61,7 +61,15 @@ namespace SaintSender.DesktopUI.Views
                 TextboxEmail.Text = "Email address";
             TextboxEmail.Foreground = new SolidColorBrush(Colors.DarkGray);
         }
+        #endregion
 
+        private void TextboxEmail_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+                PasswordboxWatermark_GotFocus(sender, e);
+        }
+
+        #region Passwordbox watermark
         private void PasswordboxWatermark_GotFocus(object sender, RoutedEventArgs e)
         {
             PasswordboxWatermark.Visibility = System.Windows.Visibility.Collapsed;
@@ -87,13 +95,9 @@ namespace SaintSender.DesktopUI.Views
                 Passwordbox.Password = null;
             Passwordbox.Foreground = new SolidColorBrush(Colors.Black);
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            var hwnd = new WindowInteropHelper(this).Handle;
-            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
-            UpdateLoginButton();
-        }
-
+        #endregion
+        
+        #region LoginButton events
         private void TextboxEmail_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateLoginButton();
@@ -108,11 +112,6 @@ namespace SaintSender.DesktopUI.Views
         { if (LoginButton != null)
                 LoginButton.Text = CredentialsNotFilled ? "Close" : "Login";
         }
-
-        private void TextboxEmail_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Tab)
-                PasswordboxWatermark_GotFocus(sender, e);
-        }
+        #endregion
     }
 }
