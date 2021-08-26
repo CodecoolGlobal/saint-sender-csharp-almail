@@ -13,7 +13,7 @@
     {
         public UserAccount account;
 
-        private bool userIsLoggedIn = true;
+        //private bool userIsLoggedIn = true;
 
         //internal Pop3Client pop3Client = new Pop3Client();
         //internal SmtpClient smtpClient = new SmtpClient();
@@ -60,7 +60,7 @@
 
         public override void SendMail(EmailMessage email)
         {
-            if (userIsLoggedIn)
+            if (UserLoggedIn)
             {
                 var emailMessage = new MimeMessage();
 
@@ -99,11 +99,11 @@
 
         public override void LoadMails()
         {
+            Emails.Clear();
 
-            if (userIsLoggedIn)
+            if (UserLoggedIn)
             {
                 //List<EmailMessage> mailList = new List<EmailMessage>();
-                Emails.Clear();
 
                 using (Pop3Client pop3Client = new Pop3Client())
                 {
@@ -124,11 +124,13 @@
 
                     pop3Client.Disconnect(true);
                 }
+
+                // TODO: save all emails into the account's json file
             }
-            else
+            /*else
             {
                 throw new Exception("There is no active user.");
-            }
+            }*/
         }
     }
 }

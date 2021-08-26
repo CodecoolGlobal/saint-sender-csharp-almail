@@ -21,11 +21,20 @@ namespace SaintSender.DesktopUI
             DataContext = _vm;
             InitializeComponent();
 
+            Login();
+        }
+
+        private void Login()
+        {
+            EmailDisplayList.Visibility = Visibility.Hidden;
+
             LoginWindow loginWindow = new LoginWindow();
             bool? loginResult = loginWindow.ShowDialog();
-            if (loginResult.HasValue || loginResult.Value) {
+            if (loginResult.HasValue || loginResult.Value)
+            {
                 _vm.LogIn(loginWindow.emailAddress, loginWindow.password);
                 EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
+                EmailDisplayList.Visibility = Visibility.Visible;
             }
         }
 
@@ -33,6 +42,12 @@ namespace SaintSender.DesktopUI
         {
             _vm.RefreshMails();
             EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
+        }
+
+        private void ButtonLogout_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.LogOut();
+            Login();
         }
     }
 }

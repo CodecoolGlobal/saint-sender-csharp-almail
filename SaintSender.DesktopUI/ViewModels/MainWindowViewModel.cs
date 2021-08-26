@@ -52,6 +52,11 @@ namespace SaintSender.DesktopUI.ViewModels
             _mailService.LogInUser(email, password);
         }
 
+        public void LogOut()
+        {
+            _mailService.LogOutCurrentUser();
+        }
+
         public void RefreshMails()
         {
             _mailService.LoadMails();

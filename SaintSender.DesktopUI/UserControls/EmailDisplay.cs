@@ -113,13 +113,10 @@ namespace SaintSender.DesktopUI.UserControls
 
             float yPosition = -scrollY + index * ItemHeight;
 
-            drawingContext.ClipRectangle(0, yPosition, OutsideWidth, ItemHeight - BorderThickness);
+            drawingContext.ClipRectangle(0, yPosition, OutsideWidth, LineHeight);
 
             Color backColor = ItemBackground(index);
             Color foreColor = ItemForeground(index);
-
-            if (yPosition > OutsideHeight || yPosition + LineHeight < 0)
-                return;
 
             drawingContext.DrawRectangle(new SolidColorBrush(backColor), null, new Rect(new Point(0, yPosition), new Size(OutsideWidth, LineHeight)));
 
@@ -154,7 +151,7 @@ namespace SaintSender.DesktopUI.UserControls
             if (!mouseInside)
                 return;
 
-            float viewScale = OutsideHeight / (ScrollMax + OutsideHeight);
+            float viewScale = OutsideHeight / AllEmailsHeight;
 
             if (viewScale >= 1)
                 return;
@@ -174,7 +171,7 @@ namespace SaintSender.DesktopUI.UserControls
             scrollY = Math.Max(0, scrollY);
             scrollY = Math.Min(ScrollMax, scrollY);
 
-            if (emails.Length * ItemHeight < OutsideHeight)
+            if (AllEmailsHeight <= OutsideHeight)
                 scrollY = 0;
         }
         #endregion
@@ -210,6 +207,8 @@ namespace SaintSender.DesktopUI.UserControls
 
         private float ItemHeight => LineHeight + BorderThickness;
 
+        private float AllEmailsHeight => emails.Length * ItemHeight;
+
         private float ScrollMax
         {
             get
@@ -217,7 +216,7 @@ namespace SaintSender.DesktopUI.UserControls
                 if (emails == null)
                     return 0;
 
-                return emails.Length * ItemHeight - InsideHeight;
+                return AllEmailsHeight - OutsideHeight;
             }
         }
 
