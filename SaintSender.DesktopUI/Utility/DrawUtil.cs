@@ -24,6 +24,9 @@ namespace SaintSender.DesktopUI.Utility
         /// <returns>Measurable FormattedText instance</returns>
         public static FormattedText FormatText(string text, Brush color, int fontSize = 12, bool bold = false, string fontFamily = "Segoe UI")
         {
+            if (text == null)
+                text = "";
+
             return new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                                 new Typeface(new FontFamily(fontFamily),
                                         FontStyles.Normal,
