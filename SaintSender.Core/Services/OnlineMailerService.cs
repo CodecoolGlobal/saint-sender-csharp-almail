@@ -9,13 +9,16 @@
     using System.Windows.Forms;
     using System.Diagnostics;
     using System.Text.RegularExpressions;
+    using System.Collections.Generic;
 
     public class OnlineMailerService : IMailerClient
     {
+        private List<EmailMessage> sentEmailsSinceUpdate = new List<EmailMessage>();
         public override void SendMail(EmailMessage email)
         {
             if (IsConnectedToInternet())
             {
+                sentEmailsSinceUpdate.Add(email);
                 var emailMessage = new MimeMessage();
 
                 emailMessage.From.Add(new MailboxAddress(email.Sender, email.Sender));
@@ -46,6 +49,11 @@
             SecureStorageAccess storageAccess = new SecureStorageAccess();
 
             Emails.Clear();
+            if (sentEmailsSinceUpdate.Count > 0)
+            {
+                Emails.AddRange(sentEmailsSinceUpdate);
+                sentEmailsSinceUpdate.Clear();
+            }
 
             if (!UserLoggedIn)
                 return true;
@@ -75,7 +83,7 @@
                         LogOutCurrentUser();
                         return false;
                     }
-                        
+
                     for (int i = 0; i < pop3Client.Count; i++)
                     {
                         var message = new EmailMessage(pop3Client.GetMessage(i));
@@ -114,7 +122,7 @@
             SecureStorageAccess storageAccess = new SecureStorageAccess();
             storageAccess.SaveUserEmails(UserEmail, Emails);
         }
-        
+
         private bool ValidateEmailAddressNPasswordFormat()
         {
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");

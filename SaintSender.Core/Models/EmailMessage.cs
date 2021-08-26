@@ -26,6 +26,7 @@ namespace SaintSender.Core.Models
 
         public EmailMessage(string sender, string receiver, string subject, string body, string html, bool isReaded = false, bool isSent = false, bool isReceived = false)
         {
+            SentTime = DateTime.Now;
             HTMLBody = html;
             Sender = sender;
             Receiver.Add(receiver);
