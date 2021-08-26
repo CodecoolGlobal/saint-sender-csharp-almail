@@ -20,9 +20,11 @@ namespace SaintSender.Core.Models
                 Body = "";
             SentTime = copy.SentTime;
             IsRead = copy.IsRead;
+            IsSent = copy.IsSent;
+            IsReceived = copy.IsReceived;
         }
 
-        public EmailMessage(string sender, string receiver, string subject, string body, string html, bool isReaded = false)
+        public EmailMessage(string sender, string receiver, string subject, string body, string html, bool isReaded = false, bool isSent = false, bool isReceived = false)
         {
             HTMLBody = html;
             Sender = sender;
@@ -32,11 +34,13 @@ namespace SaintSender.Core.Models
             if (Body == null)
                 Body = "";
             IsRead = isReaded;
+            IsSent = isSent;
+            IsReceived = isReceived;
         }
 
 
         [JsonConstructor]
-        public EmailMessage(string sentTime ,string sender, string[] receiver, string subject, string body, string html, bool isRead)
+        public EmailMessage(string sentTime ,string sender, string[] receiver, string subject, string body, string html, bool isRead, bool isSent, bool isReceived)
         {
             SentTime = DateTime.Parse(sentTime);
             Sender = sender;
@@ -47,7 +51,10 @@ namespace SaintSender.Core.Models
                 Body = "";
             HTMLBody = html;
             IsRead = isRead;
+            IsSent = isSent;
+            IsReceived = isReceived;
         }
+
         public EmailMessage(MimeMessage message)
         {
             foreach (var mailbox in message.From.Mailboxes)
@@ -74,15 +81,19 @@ namespace SaintSender.Core.Models
 
         public string Sender { get; }
 
-        public List<string> Receiver { get; set; } = new List<string>();
+        public List<string> Receiver = new List<string>();
 
-        public string Subject { get; set; }
+        public string Subject;
 
-        public bool IsRead { get; set; }
+        public bool IsRead;
 
-        public string Body { get; set; }
+        public string Body;
 
         public string HTMLBody { get; }
+
+        public bool IsSent = false;
+
+        public bool IsReceived = false;
 
         public override string ToString()
         {
@@ -113,6 +124,9 @@ namespace SaintSender.Core.Models
                     return false;
 
                 if (otherMessage.SentTime.Ticks != SentTime.Ticks)
+                    return false;
+
+                if (otherMessage.IsRead != IsRead || otherMessage.IsSent != IsSent)
                     return false;
 
                 return true;

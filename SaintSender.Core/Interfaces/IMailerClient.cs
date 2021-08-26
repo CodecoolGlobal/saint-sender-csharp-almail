@@ -42,7 +42,7 @@ namespace SaintSender.Core.Interfaces
 
             UserLoggedIn = true;
 
-            return LoadMails();
+            return LoadMails(false);
         }
 
         /// <summary>
@@ -66,6 +66,16 @@ namespace SaintSender.Core.Interfaces
         /// <summary>
         /// (Re)loads the email list
         /// </summary>
-        public abstract bool LoadMails();
+        public abstract bool LoadMails(bool clearStorage = false);
+
+        public bool IsMessageTypeSent(EmailMessage message)
+        {
+            return message.Sender == UserEmail;
+        }
+
+        public bool IsMessageTypeReceived(EmailMessage message)
+        {
+            return message.Receiver.Contains(UserEmail);
+        }
     }
 }
