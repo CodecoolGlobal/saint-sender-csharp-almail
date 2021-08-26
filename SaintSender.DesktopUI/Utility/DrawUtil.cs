@@ -58,6 +58,38 @@ namespace SaintSender.DesktopUI.Utility
             return Color.FromArgb((byte)Math.Round(alpha * 255), (byte)(color.R * rgbMultiplier), (byte)(color.G * rgbMultiplier), (byte)(color.B * rgbMultiplier));
         }
 
+        public static string TextMaxWidth(string text, int maxWidth, string suffix = "...")
+        {
+            if (text.Length <= maxWidth)
+                return text;
+
+            string[] words = text.Split(' ');
+            string result = "";
+            foreach(string word in words)
+            {
+                if ((result + " " + word).Length > maxWidth)
+                    break;
+
+                result += " " + word;
+            }
+
+            if (result.Length < maxWidth / 2)
+                return result.Substring(0, Math.Min(maxWidth, result.Length)) + suffix;
+
+            return result + suffix;
+        }
+
+        public static string TextMaxHeight(string text, int lines, string suffix = "[...]", int maxWidth = -1)
+        {
+            string[] textLines = text.Split('\n');
+            string[] resultLines = new string[Math.Min(textLines.Length, lines)];
+            for(int i=0; i <resultLines.Length; i++)
+            {
+                resultLines[i] = maxWidth < 0 ? textLines[i] : TextMaxWidth(textLines[i], maxWidth);
+            }
+            return string.Join("\n", resultLines);
+        }
+
         /// <summary>
         /// Creates a GradientStopCollection with evenly distributed colors
         /// </summary>

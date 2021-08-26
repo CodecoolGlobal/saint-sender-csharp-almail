@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using SaintSender.DesktopUI.Utility;
@@ -18,6 +19,14 @@ namespace SaintSender.DesktopUI.UserControls
         protected virtual bool RestrictedRendering => true;
         protected virtual bool Scrollable => false;
 
+        protected virtual bool HasFramerate => false;
+        protected virtual int Framerate => 50;
+
+        private int FrameInterval => (int)Math.Round(1f / (float)Framerate * 1000f);
+
+        protected virtual bool DebugDraw => false;
+        private int debugDrawIndex = 0;
+
         protected float InsideLeft { get; private set; } = 0;
         protected float InsideRight { get; private set; } = 0;
         protected float InsideTop { get; private set; } = 0;
@@ -33,6 +42,8 @@ namespace SaintSender.DesktopUI.UserControls
 
         protected Rect InsideRect => new Rect(InsideLeft, InsideTop, InsideWidth, InsideHeight);
         protected Rect OutsideRect => new Rect(OutsideLeft, OutsideTop, OutsideWidth, OutsideHeight);
+
+        private System.Windows.Forms.Timer updateTimer = null;
 
         protected override void OnRender(DrawingContext drawingContext)
         {
@@ -58,6 +69,18 @@ namespace SaintSender.DesktopUI.UserControls
 
             if (RestrictedRendering)
                 drawingContext.ResetClip();
+
+            if (DebugDraw)
+            {
+                debugDrawIndex++;
+                if (debugDrawIndex > 20)
+                    debugDrawIndex = 0;
+
+                for (int i=0; i <debugDrawIndex; i++)
+                {
+                    drawingContext.DrawRectangle(Brushes.Red, null, new Rect(10 + 20 * i, 10, 10, 10));
+                }
+            }
         }
 
         protected abstract void Render(DrawingContext drawingContext);
@@ -140,7 +163,32 @@ namespace SaintSender.DesktopUI.UserControls
 
         protected void Refresh()
         {
+            if (!HasFramerate)
+                InvalidateVisual();
+            else
+            {
+                if (updateTimer == null)
+                {
+                    updateTimer = new System.Windows.Forms.Timer();
+                    updateTimer.Interval = FrameInterval;
+                    updateTimer.Tick += UpdateTimer_Tick;
+                }
+                else if (updateTimer.Interval != FrameInterval)
+                {
+                    updateTimer.Stop();
+                    updateTimer.Interval = FrameInterval;
+                    updateTimer.Start();
+                }
+
+                if (!updateTimer.Enabled)
+                    updateTimer.Start();
+            }
+        }
+
+        private void UpdateTimer_Tick(object sender, System.EventArgs e)
+        {
             InvalidateVisual();
+            updateTimer.Start();
         }
     }
 }
