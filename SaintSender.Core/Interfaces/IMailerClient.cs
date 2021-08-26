@@ -69,6 +69,13 @@ namespace SaintSender.Core.Interfaces
         /// </summary>
         public abstract bool LoadMails(bool clearStorage = false);
 
+        /// <summary>
+        /// Updates an email read status
+        /// </summary>
+        /// <param name="emailIndex">Email index</param>
+        /// <param name="status">Status</param>
+        public abstract void ChangeEmailReadStatus(int emailIndex, bool status);
+
         public bool IsMessageTypeSent(EmailMessage message)
         {
             return message.Sender == UserEmail;

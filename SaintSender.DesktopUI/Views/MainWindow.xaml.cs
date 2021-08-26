@@ -147,5 +147,15 @@ namespace SaintSender.DesktopUI
             EmailDisplayList.SearchText(TextboxSearch.Text == "Search..." ? "" : TextboxSearch.Text);
             UpdatePagination();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            EmailDisplayList.EmailReadStatusChanged += EmailDisplayList_EmailReadStatusChanged;
+        }
+
+        private void EmailDisplayList_EmailReadStatusChanged(object sender, UserControls.EmailReadStatusEventArgs e)
+        {
+            _vm.UpdateEmailReadStatus(e.EmailIndex, e.EmailStatus);
+        }
     }
 }

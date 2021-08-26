@@ -85,7 +85,9 @@ namespace SaintSender.DesktopUI.UserControls
 
         protected abstract void Render(DrawingContext drawingContext);
 
-        protected virtual void OnScroll(float scrollDelta) { /* cirip cirip */ }
+        protected virtual void ScrollEvent(float scrollDelta) { /* cirip cirip */ }
+
+        protected virtual void ClickEvent() { /* cirip cirip */ }
 
         private bool IsMouseInBounds(MouseEventArgs e)
         {
@@ -134,6 +136,9 @@ namespace SaintSender.DesktopUI.UserControls
         }
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
+            if (mouseInside && mouseLeftButton)
+                ClickEvent();
+
             base.OnMouseRightButtonDown(e);
             mouseLeftButton = false;
             Refresh();
@@ -156,7 +161,7 @@ namespace SaintSender.DesktopUI.UserControls
 
             if (e.Delta != 0)
             {
-                OnScroll(e.Delta);
+                ScrollEvent(e.Delta);
                 Refresh();
             }
         }

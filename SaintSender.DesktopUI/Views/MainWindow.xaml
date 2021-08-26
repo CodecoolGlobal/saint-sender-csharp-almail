@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="SainSender"
         Height="600"
-        Width="1024" MinWidth="800" MinHeight="401" WindowStartupLocation="CenterScreen">
+        Width="1024" MinWidth="800" MinHeight="401" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Window.Background>
         <ImageBrush ImageSource="/SaintSender.DesktopUI;component/Resources/Images/main_background_4.jpg"/>
     </Window.Background>

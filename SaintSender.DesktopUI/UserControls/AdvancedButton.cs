@@ -159,12 +159,10 @@ namespace SaintSender.DesktopUI.UserControls
 
 
         #region Events
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void ClickEvent()
         {
-            if (mouseLeftButton && OnClick != null)
+            if (OnClick != null)
                 OnClick.Invoke(this, new EventArgs());
-
-            base.OnMouseLeftButtonUp(e);
         }
         #endregion
 

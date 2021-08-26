@@ -101,6 +101,20 @@
             return false;
         }
 
+        public override void ChangeEmailReadStatus(int emailIndex, bool status)
+        {
+            if (emailIndex < 0 || emailIndex >= Emails.Count)
+                return;
+
+            Emails[emailIndex].IsRead = status;
+
+            if (!UserLoggedIn)
+                return;
+
+            SecureStorageAccess storageAccess = new SecureStorageAccess();
+            storageAccess.SaveUserEmails(UserEmail, Emails);
+        }
+        
         private bool ValidateEmailAddressNPasswordFormat()
         {
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
