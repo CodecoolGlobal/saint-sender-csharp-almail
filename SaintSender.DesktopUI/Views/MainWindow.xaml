@@ -29,7 +29,7 @@
             <usercontrols:EmailDisplay x:Name="EmailDisplayList" ListItemBackground="#E5FFFFFF" ListItemForeground="#FF404040" LineHeight="60" BorderThickness="5" Margin="20,0,0,0" ListItemHoverBackground="#FF535353" ListItemHoverForeground="White"/>
         </Grid>
         <Grid x:Name="PanelTop" Margin="200,0,0,0" VerticalAlignment="Top" Height="43">
-            <TextBox x:Name="TextboxSearch" Height="23" Margin="0,10,20,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" BorderBrush="Black" Foreground="Black" BorderThickness="1" HorizontalAlignment="Right" Width="150"/>
+            <TextBox x:Name="TextboxSearch" Height="23" Margin="0,10,20,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" BorderBrush="Black" Foreground="DarkGray" BorderThickness="1" HorizontalAlignment="Right" Width="150" LostFocus="TextboxSearch_LostFocus" GotFocus="TextboxSearch_GotFocus"/>
         </Grid>
     </Grid>
 </Window>
