@@ -72,6 +72,7 @@
                     {
                         MessageBox.Show("Invalid user credentials.");
                         LogOutCurrentUser();
+                        
                         return false;
                     }
                     catch
