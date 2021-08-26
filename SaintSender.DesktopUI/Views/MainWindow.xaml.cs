@@ -25,6 +25,7 @@ namespace SaintSender.DesktopUI
             InitializeComponent();
 
             Login();
+            UpdatePagination();
         }
 
         private void Login()
@@ -57,6 +58,15 @@ namespace SaintSender.DesktopUI
                 Application.Exit();*/
         }
 
+        private void UpdatePagination()
+        {
+            ButtonPreviousPage.IsEnabled = EmailDisplayList.CanNavigatePrevious;
+            ButtonNextPage.IsEnabled = EmailDisplayList.CanNavigateNext;
+            LabelPagination.Content = EmailDisplayList.PaginationText;
+            ButtonPreviousPage.Refresh();
+            ButtonNextPage.Refresh();
+        }
+
         private void ButtonReload_Click(object sender, RoutedEventArgs e)
         {
             _vm.RefreshMails();
@@ -76,6 +86,18 @@ namespace SaintSender.DesktopUI
 
             if (result.HasValue && result.Value)
                 _vm.SendMail(writeWindow.Receiver, writeWindow.Subject, writeWindow.Body);
+        }
+
+        private void ButtonPreviousPage_OnClick(object sender, EventArgs e)
+        {
+            EmailDisplayList.NavigatePagePrevious();
+            UpdatePagination();
+        }
+
+        private void ButtonNextPage_OnClick(object sender, EventArgs e)
+        {
+            EmailDisplayList.NavigatePageNext();
+            UpdatePagination();
         }
     }
 }
