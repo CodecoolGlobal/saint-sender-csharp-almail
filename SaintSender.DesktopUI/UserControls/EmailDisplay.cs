@@ -98,10 +98,53 @@ namespace SaintSender.DesktopUI.UserControls
         #region Rendering
         protected override void Render(DrawingContext drawingContext)
         {
-            for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
-                RenderEmailListItem(drawingContext, emails[emailIndex], emailIndex);
+            if (openedEmail == null)
+            {
+                for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
+                    RenderEmailListItem(drawingContext, emails[emailIndex], emailIndex);
+            }
+            else
+                RenderEmailDetails(drawingContext);
 
             RenderScrollbar(drawingContext);
+        }
+
+        void RenderEmailDetails(DrawingContext drawingContext)
+        {
+            SolidColorBrush backColor = new SolidColorBrush(ItemBackground(-2));
+            SolidColorBrush foreColor = new SolidColorBrush(ItemForeground(-2));
+
+            float cursorY = SidePadding;
+
+            // From & To:
+            FormattedText fromLabelText = DrawUtil.FormatText("From:", foreColor, 14, true);
+            FormattedText fromText = DrawUtil.FormatText(openedEmail.Sender + "\n" + openedEmail.SentTime.ToString("yyyy.MM.dd HH:mm"), foreColor, 13, false);
+            Rect fromRect = new Rect(0, cursorY, (OutsideWidth - SidePadding) / 2, fromLabelText.Height + fromText.Height + SidePadding * 2);
+
+            FormattedText toLabelText = DrawUtil.FormatText("To:", foreColor, 14, true);
+            string toList = string.Join(",\n", openedEmail.Receiver);
+            FormattedText toText = DrawUtil.FormatText(toList, foreColor, 13);
+            Rect toRect = new Rect(fromRect.Width + SidePadding, cursorY, (OutsideWidth - SidePadding) / 2, toLabelText.Height + toText.Height + SidePadding * 2);
+
+            if (fromRect.Height > toRect.Height)
+                toRect.Height = fromRect.Height;
+            if (toRect.Height > fromRect.Height)
+                fromRect.Height = toRect.Height;
+
+            drawingContext.DrawRectangle(backColor, null, fromRect);
+            drawingContext.DrawText(fromLabelText, new Point(fromRect.X + SidePadding, fromRect.Y + SidePadding));
+            drawingContext.DrawText(fromText, new Point(fromRect.X + SidePadding, fromRect.Y + SidePadding + fromLabelText.Height));
+
+            drawingContext.DrawRectangle(backColor, null, toRect);
+            drawingContext.DrawText(toLabelText, new Point(toRect.X + SidePadding, toRect.Y + SidePadding));
+            drawingContext.DrawText(toText, new Point(toRect.X + SidePadding, toRect.Y + SidePadding + toLabelText.Height));
+
+            cursorY += (float)toRect.Height + SidePadding;
+
+            FormattedText bodyText = DrawUtil.FormatText(openedEmail.Body, foreColor, 12);
+            Rect bodyRect = new Rect(0, cursorY, OutsideWidth, bodyText.Height + SidePadding * 2);
+            drawingContext.DrawRectangle(backColor, null, bodyRect);
+            drawingContext.DrawText(bodyText, new Point(bodyRect.X + SidePadding, bodyRect.Y + SidePadding));
         }
 
         /// <summary>
@@ -213,8 +256,6 @@ namespace SaintSender.DesktopUI.UserControls
             for (int i=0; i < emailList.Length; i++)
             {
                 allEmails[i] = emailList[i].Clone();
-                /*allEmails[i].Subject = DrawUtil.TextMaxWidth(allEmails[i].Subject, 20);
-                allEmails[i].Body = DrawUtil.TextMaxHeight(allEmails[i].Body, 3, "[...]", 200);*/
             }
 
             UpdateFiltering();
