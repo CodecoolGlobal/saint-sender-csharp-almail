@@ -20,7 +20,7 @@
                    TextWrapping="Wrap"
                    VerticalAlignment="Top" />
         <Grid x:Name="PanelLeft" HorizontalAlignment="Left" Margin="0" Width="200" Background="#7FFFFFFF">
-            <usercontrols:IconButton x:Name="ButtonWrite" Text="Write" Margin="20,20,20,0" VerticalAlignment="Top" Height="40" BorderBrush="#00000000" Foreground="White" BorderThickness="0" Background="Black" HoverBackground="White" HoverForeground="Black"/>
+            <usercontrols:IconButton x:Name="ButtonWrite" Text="Write" Margin="20,20,20,0" VerticalAlignment="Top" Height="40" BorderBrush="#00000000" Foreground="White" BorderThickness="0" Background="Black" HoverBackground="White" HoverForeground="Black" Click="ButtonWrite_Click"/>
             <usercontrols:IconButton x:Name="ButtonReload" Text="Reload" Margin="20,74,20,0" VerticalAlignment="Top" Height="23" Background="Black" BorderBrush="#00707070" BorderThickness="0" Foreground="White" HoverBackground="White" HoverForeground="Black" Click="ButtonReload_Click"/>
             <usercontrols:IconButton x:Name="ButtonLogout" Text="Logout" Margin="20,0,20,20" VerticalAlignment="Bottom" Height="23" Background="Black" Foreground="White" BorderBrush="#00707070" BorderThickness="0" HoverBackground="White" HoverForeground="Black" Click="ButtonLogout_Click"/>
             <usercontrols:AdvancedButton HorizontalAlignment="Left" Height="28" Margin="20,115,0,0" VerticalAlignment="Top" Width="160" Background="Black" Foreground="White" HoverBackground="#FF3A3A3A" HoverForeground="#FFE0E0E0" PressedBackground="White" PressedForeground="Black"/>
