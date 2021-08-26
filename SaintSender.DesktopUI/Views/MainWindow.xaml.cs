@@ -82,19 +82,19 @@ namespace SaintSender.DesktopUI
                 LabelPagination.Content = EmailDisplayList.PaginationText;
         }
 
-        private void ButtonReload_Click(object sender, RoutedEventArgs e)
+        private void ButtonReload_Click(object sender, EventArgs e)
         {
             _vm.RefreshMails();
             EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
         }
 
-        private void ButtonLogout_Click(object sender, RoutedEventArgs e)
+        private void ButtonLogout_Click(object sender, EventArgs e)
         {
             _vm.LogOut();
             Login();
         }
 
-        private void ButtonWrite_Click(object sender, RoutedEventArgs e)
+        private void ButtonWrite_Click(object sender, EventArgs e)
         {
             WriteWindow writeWindow = new WriteWindow();
             bool? result = writeWindow.ShowDialog();
@@ -129,19 +129,19 @@ namespace SaintSender.DesktopUI
             TextboxSearch.Foreground = new SolidColorBrush(Colors.Black);
         }
 
-        private void ButtonReceived_Click(object sender, RoutedEventArgs e)
+        private void ButtonReceived_Click(object sender, EventArgs e)
         {
             EmailDisplayList.FilterEmails(UserControls.MailFilter.Received);
             UpdatePagination();
         }
 
-        private void ButtonSent_Click(object sender, RoutedEventArgs e)
+        private void ButtonSent_Click(object sender, EventArgs e)
         {
             EmailDisplayList.FilterEmails(UserControls.MailFilter.Sent);
             UpdatePagination();
         }
 
-        private void ButtonAll_Click(object sender, RoutedEventArgs e)
+        private void ButtonAll_Click(object sender, EventArgs e)
         {
             EmailDisplayList.FilterEmails(UserControls.MailFilter.All);
             UpdatePagination();
