@@ -19,12 +19,11 @@
                 var emailMessage = new MimeMessage();
 
                 emailMessage.From.Add(new MailboxAddress(email.Sender, email.Sender));
-
                 foreach (string address in email.Receiver)
                     emailMessage.To.Add(new MailboxAddress(address, address));
 
                 emailMessage.Subject = email.Subject;
-                emailMessage.Body = new TextPart("html") { Text = email.Subject };
+                emailMessage.Body = new TextPart("html") { Text = email.HTMLBody };
 
                 try
                 {
