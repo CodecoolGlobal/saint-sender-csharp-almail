@@ -18,26 +18,20 @@ namespace SaintSender.Core.Models
         /// </summary>
         /// <param name="email">User email</param>
         /// <returns>User data as Dictionary</returns>
-        public Dictionary<string,string> GetUserLoginData(string email)
+        public Dictionary<string, string> GetUserLoginData(string email)
         {
-            if (isoStore.FileExists("UserData.txt"))
+
+
+            List<string> userDataList = ReadData("UserData");
+            try
             {
-                List<string> userDataList = ReadData("UserData");
-                try
-                {
-                    int index = userDataList.IndexOf(email);
-                    return new Dictionary<string, string>() { { email, userDataList[index+1] } };
-                }
-                catch
-                {
-                    MessageBox.Show("The user does not exist.");
-                }
-                
-            } else
+                int index = userDataList.IndexOf(email);
+                return new Dictionary<string, string>() { { email, userDataList[index + 1] } };
+            }
+            catch
             {
                 MessageBox.Show("The user does not exist.");
             }
-
             return new Dictionary<string, string>();
         }
 
@@ -58,11 +52,23 @@ namespace SaintSender.Core.Models
                     }
                 }
             }
-            catch 
+            catch
             {
                 return new List<string>();
             }
-            
+
+        }
+
+        public List<EmailMessage> GetUserEmails(string user)
+        {
+            string jsonString = string.Join("", ReadData(user));
+            Debug.WriteLine(jsonString);
+
+            var deserialized = JsonConvert.DeserializeObject<List<EmailMessage>>(jsonString);
+
+            return deserialized == null ? new List<EmailMessage>() : deserialized;
+
+
         }
         #endregion
 
@@ -77,13 +83,16 @@ namespace SaintSender.Core.Models
         {
             if (isoStore.FileExists("UserData.txt"))
             {
+                Debug.WriteLine("File exists on add");
                 if (!ReadData("UserData").Contains(email))
                 {
+                    Debug.WriteLine("Adding user to file: " + email);
                     WriteData("UserData", new List<string> { email, encryptedPassword }, FileMode.Append);
                 }
             }
             else
             {
+                Debug.WriteLine("Creating file and adding " + email);
                 WriteData("UserData", new List<string> { email, encryptedPassword }, FileMode.CreateNew);
             }
         }
@@ -94,21 +103,9 @@ namespace SaintSender.Core.Models
             WriteData(user, jsonString);
         }
 
-        public List<EmailMessage> GetUserEmails(string user)
-        {
-            string jsonString = string.Join("",ReadData(user));
-            Debug.WriteLine(jsonString);
-
-                var deserialized = JsonConvert.DeserializeObject<List<EmailMessage>>(jsonString);
-                
-                return deserialized == null ? new List<EmailMessage>() : deserialized;
-                
-
-        }
-
         public void WriteData(string fileToWrite, List<string> data, FileMode writeMethod = FileMode.Create)
         {
-            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(fileToWrite + ".txt", writeMethod, isoStore)) 
+            using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(fileToWrite + ".txt", writeMethod, isoStore))
             {
                 using (StreamWriter writer = new StreamWriter(isoStream))
                 {
