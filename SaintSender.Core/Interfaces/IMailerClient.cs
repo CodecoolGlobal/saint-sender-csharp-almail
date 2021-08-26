@@ -11,17 +11,26 @@ namespace SaintSender.Core.Interfaces
         protected string UserEmail { get; private set; }
         protected string UserPassword { get; private set; }
 
-        public void LogInUser(string userEmail, string password)
+        /// <summary>
+        /// Logs in an user with login credentials and refreshes the email list
+        /// </summary>
+        /// <param name="userEmail">User email</param>
+        /// <param name="password">User password</param>
+        public bool LogInUser(string userEmail, string password)
         {
             UserEmail = userEmail;
             UserPassword = password;
 
-            // elmentjük secure storagebe is
+            // TODO: elmentjük secure storagebe is
 
             UserLoggedIn = true;
 
-            LoadMails();
+            return LoadMails();
         }
+
+        /// <summary>
+        /// Logs out the currently logged in user
+        /// </summary>
         public void LogOutCurrentUser()
         {
             UserEmail = UserPassword = null;
@@ -30,7 +39,16 @@ namespace SaintSender.Core.Interfaces
 
             LoadMails();
         }
+
+        /// <summary>
+        /// Send an email message
+        /// </summary>
+        /// <param name="email">The email message</param>
         public abstract void SendMail(Models.EmailMessage email);
-        public abstract void LoadMails();
+
+        /// <summary>
+        /// (Re)loads the email list
+        /// </summary>
+        public abstract bool LoadMails();
     }
 }

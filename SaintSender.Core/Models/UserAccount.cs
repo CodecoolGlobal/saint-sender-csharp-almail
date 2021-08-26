@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
 namespace SaintSender.Core.Models
-
 {
     public struct UserAccount
     {

@@ -10,58 +10,38 @@ namespace SaintSender.DesktopUI.ViewModels
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
-        private string _name;
-        private string _greeting;
-        private readonly IGreetService _greetService;
         private IMailerClient _mailService = new OnlineMailerService();
 
         /// <summary>
-        /// Gets or sets value of Greeting.
+        /// Authenticates a user with email and password
         /// </summary>
-        public string Greeting
+        /// <param name="email">Email address</param>
+        /// <param name="password">Password as text</param>
+        public bool LogIn(string email, string password)
         {
-            get => _greeting;
-            set => SetProperty(ref _greeting, value);
+            return _mailService.LogInUser(email, password);
         }
 
         /// <summary>
-        /// Gets or sets the name.
+        /// Logs out the logged in user
         /// </summary>
-        public string Name
-        {
-            get => _name;
-            set => SetProperty(ref _name, value);
-        }
-
-        public MainWindowViewModel()
-        {
-            Name = string.Empty;
-            _greetService = new GreetService();
-        }
-
-        /// <summary>
-        /// Call a vendor service and apply its value into <see cref="Greeting"/> property.
-        /// </summary>
-        public void Greet()
-        {
-            Greeting = _greetService.Greet(Name);
-        }
-
-        public void LogIn(string email, string password)
-        {
-            _mailService.LogInUser(email, password);
-        }
-
         public void LogOut()
         {
             _mailService.LogOutCurrentUser();
         }
 
+        /// <summary>
+        /// Refreshes the list of emails
+        /// </summary>
         public void RefreshMails()
         {
             _mailService.LoadMails();
         }
 
+        /// <summary>
+        /// Returns an EmailMessage array
+        /// </summary>
+        /// <returns>an EmailMessage array</returns>
         public EmailMessage[] GetEmailList()
         {
             return _mailService.Emails.ToArray();
