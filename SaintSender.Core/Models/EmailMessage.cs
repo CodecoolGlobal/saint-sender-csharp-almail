@@ -148,6 +148,20 @@ public override string ToString()
 
             return true;
         }
+
+        public bool DisplayCompare(EmailMessage other)
+        {
+            if (other == null)
+                return false;
+
+            if (other.Sender != Sender)
+                return false;
+
+            if (other.SentTime.Ticks != SentTime.Ticks)
+                return false;
+
+            return true;
+        }
     }
 
 

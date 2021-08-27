@@ -239,20 +239,29 @@ namespace SaintSender.DesktopUI.UserControls
         protected override void ClickEvent()
         {
             if (IsEmailOpened)
+            {
                 return;
+                System.Diagnostics.Debug.WriteLine("opened");
+            }
 
 
             if (HoverIndex == -1)
+            {
                 return;
+                System.Diagnostics.Debug.WriteLine("hover -1");
+            }
 
             int emailIndex;
             try { 
                 emailIndex = GetEmailIndex(emails[HoverIndex]);
             }
-            catch { return; }
+            catch { System.Diagnostics.Debug.WriteLine("hover " + HoverIndex.ToString()); return; }
 
             if (emailIndex == -1)
+            {
                 return;
+                System.Diagnostics.Debug.WriteLine("email -1");
+            }
 
             openedEmail = allEmails[emailIndex];
             openedEmail.IsRead = true;
@@ -424,7 +433,7 @@ namespace SaintSender.DesktopUI.UserControls
         {
             for (int i = 0; i < allEmails.Length; i++)
             {
-                if (allEmails[i].Compare(message))
+                if (allEmails[i].DisplayCompare(message))
                     return i;
             }
             return -1;
