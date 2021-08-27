@@ -98,17 +98,70 @@ namespace SaintSender.DesktopUI.UserControls
         #region Rendering
         protected override void Render(DrawingContext drawingContext)
         {
-            if (openedEmail == null)
-            {
-                for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
-                    RenderEmailListItem(drawingContext, emails[emailIndex], emailIndex);
-            }
-            else
+            if (IsEmailOpened)
                 RenderEmailDetails(drawingContext);
+
+            else
+                RenderEmailList(drawingContext);
 
             RenderScrollbar(drawingContext);
         }
 
+        /// <summary>
+        /// Renders the list of the emails
+        /// </summary>
+        /// <param name="drawingContext">The DrawingContext instance</param>
+        void RenderEmailList(DrawingContext drawingContext)
+        {
+            for (int emailIndex = 0; emailIndex < emails.Length; emailIndex++)
+                RenderEmailListItem(drawingContext, emailIndex);
+        }
+
+        /// <summary>
+        /// Draws a line of email list
+        /// </summary>
+        /// <param name="drawingContext">The DrawingContext instance</param>
+        /// <param name="index">The index of the email</param>
+        void RenderEmailListItem(DrawingContext drawingContext, int index)
+        {
+            EmailMessage email = emails[index];
+
+            float yPosition = -scrollY + index * ItemHeight;
+
+            drawingContext.ClipRectangle(0, yPosition, OutsideWidth, LineHeight);
+
+            Color backColor = ItemBackground(index);
+            Color foreColor = ItemForeground(index);
+
+            drawingContext.DrawRectangle(new SolidColorBrush(backColor), null, new Rect(new Point(0, yPosition), new Size(OutsideWidth, LineHeight)));
+
+            drawingContext.ClipRectangle(InsideLeft, yPosition, ShrinkWidth * DateWidth, LineHeight);
+            FormattedText emailText = DrawUtil.FormatText(email.Sender, new SolidColorBrush(foreColor), 12, true);
+            FormattedText dateText = DrawUtil.FormatText(email.SentTime.ToString("yyyy.MM.dd HH:mm"), new SolidColorBrush(foreColor), 12);
+            drawingContext.DrawText(emailText, new Point(InsideLeft, yPosition + LineHeight / 2 - emailText.Height));
+            drawingContext.DrawText(dateText, new Point(InsideLeft, yPosition + LineHeight / 2));
+            drawingContext.ResetClip();
+
+            drawingContext.ClipRectangle(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition, ShrinkWidth * TitleWidth, LineHeight);
+            FormattedText titleText = DrawUtil.FormatText(email.Subject, new SolidColorBrush(foreColor), 14, !email.IsRead);
+            drawingContext.DrawText(titleText, new Point(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
+            drawingContext.ResetClip();
+
+            
+            if (titleText.Width > ShrinkWidth * TitleWidth)
+                drawingContext.DrawGradient(new Rect(InsideLeft + ShrinkWidth * (DateWidth + TitleWidth), yPosition, SidePadding * 2, LineHeight), new Color[] { DrawUtil.ColorAlpha(backColor, 0), DrawUtil.ColorAlpha(backColor, 1), DrawUtil.ColorAlpha(backColor, 0) });
+            
+
+            FormattedText bodyText = DrawUtil.FormatText(email.Body, new SolidColorBrush(foreColor), 12);
+            drawingContext.DrawText(bodyText, new Point(InsideLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : yPosition + 8));
+            
+            drawingContext.ResetClip();
+        }
+
+        /// <summary>
+        /// Renders the detailed email view
+        /// </summary>
+        /// <param name="drawingContext">The drawing context</param>
         void RenderEmailDetails(DrawingContext drawingContext)
         {
             SolidColorBrush backColor = new SolidColorBrush(ItemBackground(-2));
@@ -148,47 +201,6 @@ namespace SaintSender.DesktopUI.UserControls
             drawingContext.DrawText(bodyText, new Point(bodyRect.X + SidePadding, bodyRect.Y + SidePadding));
 
             openedViewHeight = cursorY + (float)bodyRect.Height + SidePadding + scrollY;
-        }
-
-        /// <summary>
-        /// Draws a line of email list
-        /// </summary>
-        /// <param name="drawingContext">The DrawingContext instance</param>
-        /// <param name="email">The EmailData instance</param>
-        /// <param name="yPosition">The line Y position</param>
-        void RenderEmailListItem(DrawingContext drawingContext, EmailMessage email, int index)
-        {
-
-            float yPosition = -scrollY + index * ItemHeight;
-
-            drawingContext.ClipRectangle(0, yPosition, OutsideWidth, LineHeight);
-
-            Color backColor = ItemBackground(index);
-            Color foreColor = ItemForeground(index);
-
-            drawingContext.DrawRectangle(new SolidColorBrush(backColor), null, new Rect(new Point(0, yPosition), new Size(OutsideWidth, LineHeight)));
-
-            drawingContext.ClipRectangle(InsideLeft, yPosition, ShrinkWidth * DateWidth, LineHeight);
-            FormattedText emailText = DrawUtil.FormatText(email.Sender, new SolidColorBrush(foreColor), 12, true);
-            FormattedText dateText = DrawUtil.FormatText(email.SentTime.ToString("yyyy.MM.dd HH:mm"), new SolidColorBrush(foreColor), 12);
-            drawingContext.DrawText(emailText, new Point(InsideLeft, yPosition + LineHeight / 2 - emailText.Height));
-            drawingContext.DrawText(dateText, new Point(InsideLeft, yPosition + LineHeight / 2));
-            drawingContext.ResetClip();
-
-            drawingContext.ClipRectangle(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition, ShrinkWidth * TitleWidth, LineHeight);
-            FormattedText titleText = DrawUtil.FormatText(email.Subject, new SolidColorBrush(foreColor), 14, !email.IsRead);
-            drawingContext.DrawText(titleText, new Point(InsideLeft + SidePadding + ShrinkWidth * DateWidth, yPosition + LineHeight / 2f - titleText.Height / 2f));
-            drawingContext.ResetClip();
-
-            
-            if (titleText.Width > ShrinkWidth * TitleWidth)
-                drawingContext.DrawGradient(new Rect(InsideLeft + ShrinkWidth * (DateWidth + TitleWidth), yPosition, SidePadding * 2, LineHeight), new Color[] { DrawUtil.ColorAlpha(backColor, 0), DrawUtil.ColorAlpha(backColor, 1), DrawUtil.ColorAlpha(backColor, 0) });
-            
-
-            FormattedText bodyText = DrawUtil.FormatText(email.Body, new SolidColorBrush(foreColor), 12);
-            drawingContext.DrawText(bodyText, new Point(InsideLeft + SidePadding * 2 + ShrinkWidth * (DateWidth + TitleWidth), bodyText.Height <= LineHeight ? yPosition + LineHeight / 2 - bodyText.Height / 2 : yPosition + 8));
-            
-            drawingContext.ResetClip();
         }
 
         /// <summary>
