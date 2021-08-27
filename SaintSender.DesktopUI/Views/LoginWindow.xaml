@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SaintSender.DesktopUI.Views"
         xmlns:usercontrols="clr-namespace:SaintSender.DesktopUI.UserControls"
         mc:Ignorable="d"
-        Title="Login" Height="400" Width="600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="Login" Height="400" Width="600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/SaintSender.DesktopUI;component/Resources/Images/icon.ico">
     <Window.Background>
         <ImageBrush ImageSource="/SaintSender.DesktopUI;component/Resources/Images/main_background_4.jpg" Stretch="UniformToFill"/>
     </Window.Background>

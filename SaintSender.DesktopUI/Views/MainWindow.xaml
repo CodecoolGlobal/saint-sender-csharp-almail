@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:SaintSender.DesktopUI"
         xmlns:usercontrols="clr-namespace:SaintSender.DesktopUI.UserControls" x:Class="SaintSender.DesktopUI.MainWindow"
         mc:Ignorable="d"
-        Title="SainSender Email Client"
+        Title="SaintSender Email Client"
         Height="600"
-        Width="1024" MinWidth="800" MinHeight="401" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Width="1024" MinWidth="800" MinHeight="401" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/SaintSender.DesktopUI;component/Resources/Images/icon.ico">
     <Window.Background>
         <ImageBrush ImageSource="/SaintSender.DesktopUI;component/Resources/Images/main_background_4.jpg"/>
     </Window.Background>
