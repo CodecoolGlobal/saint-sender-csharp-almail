@@ -10,15 +10,14 @@
     using System.Diagnostics;
     using System.Text.RegularExpressions;
     using System.Collections.Generic;
+    using System;
 
     public class OnlineMailerService : IMailerClient
     {
-        private List<EmailMessage> sentEmailsSinceUpdate = new List<EmailMessage>();
         public override void SendMail(EmailMessage email)
         {
             if (IsConnectedToInternet())
             {
-                sentEmailsSinceUpdate.Add(email);
                 var emailMessage = new MimeMessage();
 
                 emailMessage.From.Add(new MailboxAddress(email.Sender, email.Sender));
@@ -36,6 +35,17 @@
                         smtpClient.Authenticate(UserEmail, UserPassword);
                         smtpClient.Send(emailMessage);
                     }
+
+                    EmailMessage emailToSave = new EmailMessage(email);
+                    email.IsSent = true;
+                    email.IsReceived = IsMessageTypeReceived(email);
+                    email.SentTime = DateTime.Now;
+                    email.IsRead = false;
+
+                    Emails.Add(emailToSave);
+
+                    SecureStorageAccess storageAccess = new SecureStorageAccess();
+                    storageAccess.SaveUserEmails(UserEmail, Emails);
                 }
                 catch
                 {
@@ -49,11 +59,6 @@
             SecureStorageAccess storageAccess = new SecureStorageAccess();
 
             Emails.Clear();
-            if (sentEmailsSinceUpdate.Count > 0)
-            {
-                Emails.AddRange(sentEmailsSinceUpdate);
-                sentEmailsSinceUpdate.Clear();
-            }
 
             if (!UserLoggedIn)
                 return true;
@@ -89,7 +94,17 @@
                         var message = new EmailMessage(pop3Client.GetMessage(i));
                         message.IsSent = IsMessageTypeSent(message);
                         message.IsReceived = IsMessageTypeReceived(message);
-                        if (!Emails.Contains(message))
+
+                        bool add = true;
+                        foreach(EmailMessage email in Emails) {
+                            if (email.Compare(message))
+                            {
+                                add = false;
+                                break;
+                            }
+                        }
+
+                        if (add)
                             Emails.Add(message);
                     }
 

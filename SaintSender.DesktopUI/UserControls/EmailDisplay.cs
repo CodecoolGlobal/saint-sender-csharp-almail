@@ -466,8 +466,7 @@ namespace SaintSender.DesktopUI.UserControls
                 if (searchString.Equals("") ||
                     message.Sender.ToLower().Contains(searchString.ToLower()) ||
                     message.Subject.ToLower().Contains(searchString.ToLower()) ||
-                    (message.Body != null && message.Body.ToLower().Contains(searchString.ToLower())) ||
-                    (message.HTMLBody != null && message.HTMLBody.ToLower().Contains(searchString.ToLower())))
+                    (message.Body != null && message.Body.ToLower().Contains(searchString.ToLower())))
                     emailList.Add(message);
             }
 

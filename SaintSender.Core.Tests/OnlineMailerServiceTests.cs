@@ -14,7 +14,7 @@ namespace SaintSender.Core.Tests
         {
             OnlineMailerService mailer = new OnlineMailerService();
             mailer.LogInUser("almail.alma.mama@gmail.com", "whyTho123");
-            EmailMessage mail = new EmailMessage("almail.alma.mama@gmail.com", "lehel.markon@gmail.com", "Subject", "BodyElement", "HTML");
+            EmailMessage mail = new EmailMessage("almail.alma.mama@gmail.com", "lehel.markon@gmail.com", "Subject", "BodyElement");
             mailer.SendMail(mail);
         }
 

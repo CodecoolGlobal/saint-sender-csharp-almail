@@ -11,7 +11,6 @@ namespace SaintSender.Core.Models
     {
         public EmailMessage(EmailMessage copy)
         {
-            HTMLBody = copy.HTMLBody;
             Sender = copy.Sender;
             Receiver.AddRange(copy.Receiver);
             Subject = copy.Subject;
@@ -24,10 +23,9 @@ namespace SaintSender.Core.Models
             IsReceived = copy.IsReceived;
         }
 
-        public EmailMessage(string sender, string receiver, string subject, string body, string html, bool isReaded = false, bool isSent = false, bool isReceived = false)
+        public EmailMessage(string sender, string receiver, string subject, string body, bool isReaded = false, bool isSent = false, bool isReceived = false)
         {
             SentTime = DateTime.Now;
-            HTMLBody = html;
             Sender = sender;
             Receiver.Add(receiver);
             Subject = subject;
@@ -41,7 +39,7 @@ namespace SaintSender.Core.Models
 
 
         [JsonConstructor]
-        public EmailMessage(string sentTime ,string sender, string[] receiver, string subject, string body, string html, bool isRead, bool isSent, bool isReceived)
+        public EmailMessage(string sentTime ,string sender, string[] receiver, string subject, string body, bool isRead, bool isSent, bool isReceived)
         {
             SentTime = DateTime.Parse(sentTime);
             Sender = sender;
@@ -50,7 +48,6 @@ namespace SaintSender.Core.Models
             Body = body;
             if (Body == null)
                 Body = "";
-            HTMLBody = html;
             IsRead = isRead;
             IsSent = isSent;
             IsReceived = isReceived;
@@ -66,11 +63,11 @@ namespace SaintSender.Core.Models
 
             SentTime = message.Date.DateTime;
             Subject = message.Subject;
+
             Body = message.GetTextBody(MimeKit.Text.TextFormat.Text);
+
             if (Body == null)
                 Body = "";
-
-            HTMLBody = message.HtmlBody;
         }
 
         public EmailMessage Clone()
@@ -78,25 +75,22 @@ namespace SaintSender.Core.Models
             return new EmailMessage(this);
         }
 
-        public System.DateTime SentTime { get; }
+        public System.DateTime SentTime;
 
-        public string Sender { get; }
+        public string Sender;
 
         public List<string> Receiver = new List<string>();
 
         public string Subject;
-
         public bool IsRead;
 
         public string Body;
-
-        public string HTMLBody { get; }
 
         public bool IsSent = false;
 
         public bool IsReceived = false;
 
-        public override string ToString()
+public override string ToString()
         {
             return "Sender: " + Sender + "\nReceiver: " + Receiver + "\nSubject: " + Subject + "\nBody: " + Body + "\nSentTime: " + SentTime;
         }
@@ -146,7 +140,10 @@ namespace SaintSender.Core.Models
             if (other.Sender != Sender)
                 return false;
 
-            if (other.SentTime.Ticks != SentTime.Ticks)
+            if (other.Subject != Subject)
+                return false;
+
+            if (Math.Abs(other.SentTime.TimeOfDay.TotalMinutes - SentTime.TimeOfDay.TotalMinutes) > 2 || other.SentTime.Date.Ticks != SentTime.Date.Ticks)
                 return false;
 
             return true;

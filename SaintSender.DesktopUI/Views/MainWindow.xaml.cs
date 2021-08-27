@@ -97,7 +97,11 @@ namespace SaintSender.DesktopUI
             bool? result = writeWindow.ShowDialog();
 
             if (result.HasValue && result.Value)
+            {
                 _vm.SendMail(writeWindow.Receiver, writeWindow.Subject, writeWindow.Body);
+                _vm.RefreshMails();
+                EmailDisplayList.UpdateEmailList(_vm.GetEmailList());
+            }
         }
         
         private void ButtonPreviousPage_OnClick(object sender, EventArgs e)

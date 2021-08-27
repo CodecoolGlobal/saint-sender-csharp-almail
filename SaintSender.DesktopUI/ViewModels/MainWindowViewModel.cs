@@ -54,7 +54,7 @@ namespace SaintSender.DesktopUI.ViewModels
 
         public void SendMail(string receiver, string subject, string body)
         {
-            EmailMessage emailMessage = new EmailMessage(_mailService.UserEmail, receiver, subject, body, body);
+            EmailMessage emailMessage = new EmailMessage(_mailService.UserEmail, receiver, subject, body);
             emailMessage.IsSent = true;
             _mailService.SendMail(emailMessage);
         }

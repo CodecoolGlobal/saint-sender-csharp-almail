@@ -16,7 +16,7 @@ namespace SaintSender.Core.Tests
         IsolatedStorageFile isoStore;
         SecureStorageAccess storageAccess;
         List<EmailMessage> emailMessages = new List<EmailMessage>()
-        { new EmailMessage("Sender", "Receiver", "Subject", "Body", "HTML") };
+        { new EmailMessage("Sender", "Receiver", "Subject", "Body") };
 
         [SetUp]
         public void SetUp()
